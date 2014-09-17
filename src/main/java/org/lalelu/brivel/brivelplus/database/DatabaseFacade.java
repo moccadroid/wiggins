@@ -23,13 +23,17 @@ public class DatabaseFacade {
             request.compileUpdate();
         }
 
+        databaseAccessProvider.execute(request.getUpdateSql());
+
         return request;
     }
 
     public Request mergeRequest(Request request) {
         if(!request.isInsertCompiled()) {
-            System.out.println("test");
+            request.compileInsert();
         }
+
+        databaseAccessProvider.execute(request.getInsertSql());
 
         return request;
     }
@@ -61,9 +65,6 @@ public class DatabaseFacade {
                 Map<String, Request> subRequests = request.getSubRequests();
                 for(Map.Entry<String, Request> entry : subRequests.entrySet()) {
                     Request subRequest = entry.getValue();
-
-                    if(!subRequest.isDataRequest())
-                        continue;
 
                     Class subKlass = subRequest.getKlass();
                     Object subObject = subKlass.newInstance();
