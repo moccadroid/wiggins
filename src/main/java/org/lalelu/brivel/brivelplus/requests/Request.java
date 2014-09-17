@@ -110,7 +110,7 @@ public class Request<T> {
     }
 
     public List<T> getResultList() {
-        return Collections.unmodifiableList(requestData.getResultList());
+        return (List<T>)Collections.unmodifiableList(requestData.getResultList());
     }
 
     public void clearResultList() {

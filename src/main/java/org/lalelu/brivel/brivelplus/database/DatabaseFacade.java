@@ -81,20 +81,19 @@ public class DatabaseFacade {
                     method.invoke(object, subObject);
                     subRequest.addObject(subObject);
                 }
-
                 request.addObject(object);
             }
 
         } catch (IllegalAccessException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         } catch (InstantiationException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
         return request;
