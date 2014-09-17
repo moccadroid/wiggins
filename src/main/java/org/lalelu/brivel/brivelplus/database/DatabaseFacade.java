@@ -28,7 +28,7 @@ public class DatabaseFacade {
 
     public Request mergeRequest(Request request) {
         if(!request.isInsertCompiled()) {
-
+            System.out.println("test");
         }
 
         return request;
