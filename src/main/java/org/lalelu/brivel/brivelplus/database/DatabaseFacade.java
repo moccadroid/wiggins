@@ -57,6 +57,7 @@ public class DatabaseFacade {
                     Selector<?> selector = selectSelectors.get(i);
                     if (object != null) {
                         Method method = klass.getMethod("set" + selector.getFieldName(), selector.getType());
+                        method.setAccessible(true);
                         method.invoke(object, selector.getDataConverter().read(row[i]));
                     }
                 }
@@ -76,6 +77,7 @@ public class DatabaseFacade {
                         Selector<?> selector = tmpSelectorList.get(i);
                         if (subObject != null) {
                             Method method = subKlass.getMethod("set" + selector.getFieldName(), selector.getType());
+                            method.setAccessible(true);
                             method.invoke(subObject, selector.getDataConverter().read(row[i]));
                         }
                     }
