@@ -1,6 +1,6 @@
 package org.lalelu.brivel.brivelplus.selectors;
 
-public class JoinSelector extends DefaultSelector {
+public class JoinSelector<T> extends DefaultSelector<T> {
     private String tableField = null;
     private String leftJoinSide = null;
     private String rightJoinSide = null;

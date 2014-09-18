@@ -21,10 +21,10 @@ public class RequestData<T> {
     private List<Selector<?>> compJoinList = new ArrayList<Selector<?>>();
     private List<Selector<?>> compWhereList = new ArrayList<Selector<?>>();
     private List<Selector<?>> compFromList = new ArrayList<Selector<?>>();
-    private Selector<?> limitSelector = new LimitSelector("");
-    private Selector<?> orderBySelector = new OrderBySelector("", "");
+    private Selector<?> limitSelector = new LimitSelector<Object>("");
+    private Selector<?> orderBySelector = new OrderBySelector<Object>("", "");
 
-    private Class klass;
+    private Class<T> klass;
 
     private boolean isSelectCompiled = false;
     private boolean isInsertCompiled = false;
@@ -36,7 +36,7 @@ public class RequestData<T> {
 
     private List<T> resultList = new ArrayList<T>();
 
-    private Map<String, Request> subRequests = new HashMap<String, Request>();
+    private Map<String, Request<?>> subRequests = new HashMap<String, Request<?>>();
 
     public List<Selector<?>> getSelectSelectors() {
         return selectSelectors;
@@ -118,11 +118,11 @@ public class RequestData<T> {
         this.orderBySelector = orderBySelector;
     }
 
-    public Class getKlass() {
+    public Class<T> getKlass() {
         return klass;
     }
 
-    public void setKlass(Class klass) {
+    public void setKlass(Class<T> klass) {
         this.klass = klass;
     }
 
@@ -190,11 +190,11 @@ public class RequestData<T> {
         this.resultList = resultList;
     }
 
-    public Map<String, Request> getSubRequests() {
+    public Map<String, Request<?>> getSubRequests() {
         return subRequests;
     }
 
-    public void setSubRequests(Map<String, Request> subRequests) {
+    public void setSubRequests(Map<String, Request<?>> subRequests) {
         this.subRequests = subRequests;
     }
 }

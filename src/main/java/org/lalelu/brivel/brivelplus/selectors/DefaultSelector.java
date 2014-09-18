@@ -5,7 +5,7 @@ import org.lalelu.brivel.brivelplus.selectors.dataconverter.DefaultDataConverter
 
 import java.util.Map;
 
-public class DefaultSelector implements Selector {
+public class DefaultSelector<T> implements Selector<T> {
     protected DataConverter dataConverter = new DefaultDataConverter();
 
     @Override
@@ -59,7 +59,7 @@ public class DefaultSelector implements Selector {
     }
 
     @Override
-    public Class getType() {
+    public Class<T> getType() {
         return null;
     }
 
