@@ -8,26 +8,26 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class UpdateSqlCompiler<T> extends DefaultSqlCompiler {
+public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
-    public String compile(RequestData data) {
+    public String compile(RequestData<T> data) {
         String compiledUpdateQuery = "";
 
         try {
-            for(Object objectObject : data.getResultList()) {
-                T object = (T) objectObject;
+            for(Object object : data.getResultList()) {
+                // why? : T object = (T) objectObject;
 
                 String tableName = "tableName";
                 String update = "UPDATE ";
                 if (!data.getFromSelectors().isEmpty()) {
-                    Selector selector = (Selector) data.getFromSelectors().get(0);
+                    Selector<?> selector = (Selector<?>) data.getFromSelectors().get(0);
                     update += selector.tableField() + " AS " + tableName + " ";
                 }
 
                 String values = " SET ";
                 String idField = "";
                 for (Object selectorObject : data.getSelectSelectors()) {
-                    Selector selector = (Selector) selectorObject;
+                    Selector<?> selector = (Selector<?>) selectorObject;
                     Method method = data.getKlass().getMethod("get" + selector.getFieldName());
                     method.setAccessible(true);
 
@@ -47,8 +47,8 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler {
                 compiledUpdateQuery += "; ";
 
                 for(Object mapEntry : data.getSubRequests().entrySet()) {
-                    Map.Entry<String, Request> entry = (Map.Entry<String, Request>) mapEntry;
-                    Request subRequest = entry.getValue();
+                    Map.Entry<?,?> entry = (Map.Entry<?,?>) mapEntry;
+                    Request<?> subRequest = (Request<?>) entry.getValue();
 
                     Method method = data.getKlass().getMethod("get"+ subRequest.getName());
                     method.setAccessible(true);
@@ -58,14 +58,14 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler {
                     tableName = "tableName";
                     update = "UPDATE ";
                     if (!subRequest.getFromSelectors().isEmpty()) {
-                        Selector selector = (Selector) subRequest.getFromSelectors().get(0);
+                        Selector<?> selector = (Selector<?>) subRequest.getFromSelectors().get(0);
                         update += selector.tableField() + " AS " + tableName + " ";
                     }
 
                     values = " SET ";
                     idField = "";
                     for (Object objSelector : subRequest.getSelectSelectors()) {
-                        Selector selector = (Selector) objSelector;
+                        Selector<?> selector = (Selector<?>) objSelector;
 
                         method = subRequest.getKlass().getMethod("get" + selector.getFieldName());
                         method.setAccessible(true);

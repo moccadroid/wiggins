@@ -3,13 +3,13 @@ package org.lalelu.brivel.brivelplus.requests.compiler;
 import org.lalelu.brivel.brivelplus.requests.RequestData;
 import org.lalelu.brivel.brivelplus.selectors.Selector;
 
-public class SelectSqlCompiler<T> extends DefaultSqlCompiler {
+public class SelectSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
-    public String compile(RequestData data) {
+    public String compile(RequestData<T> data) {
 
         String select = "SELECT ";
         for(Object object : data.getCompSelectList()) {
-            Selector selector = (Selector) object;
+            Selector<?> selector = (Selector<?>) object;
             if(selector.selectField() == null || selector.selectField().isEmpty() || selector.tableField() == null || selector.tableField().isEmpty())
                 continue;
 
@@ -20,7 +20,7 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler {
 
         String from = " FROM ";
         if(!data.getCompFromList().isEmpty()) {
-            Selector selector = (Selector) data.getCompFromList().get(0);
+            Selector<?> selector = (Selector<?>) data.getCompFromList().get(0);
 
             if (!from.contains(selector.tableField()))
                 from += selector.tableField() + ",";
@@ -30,7 +30,7 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler {
 
         String join = "";
         for(Object object : data.getCompJoinList()) {
-            Selector selector = (Selector) object;
+            Selector<?> selector = (Selector<?>) object;
             if(selector.leftJoinSide() == null || selector.leftJoinSide().isEmpty() || selector.rightJoinSide() == null || selector.rightJoinSide().isEmpty())
                 continue;
 
@@ -44,7 +44,7 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler {
 
         String where = " WHERE ";
         for(Object object : data.getCompWhereList()) {
-            Selector selector = (Selector) object;
+            Selector<?> selector = (Selector<?>) object;
             if(selector.whereField() == null || selector.whereField().isEmpty())
                 continue;
 

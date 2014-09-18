@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataConverterProvider {
-    private static Map<Class, DataConverter> converterMap = new HashMap<Class, DataConverter>();
+    private static Map<Class<?>, DataConverter> converterMap = new HashMap<Class<?>, DataConverter>();
     static {
         converterMap.put(String.class, new StringDataConverter());
         converterMap.put(Long.class, new LongDataConverter());
         converterMap.put(Double.class, new DoubleDataConverter());
     }
 
-    public static DataConverter getDefaultDataConverter(Class clazz) {
+    public static DataConverter getDefaultDataConverter(Class<?> clazz) {
         DataConverter dataConverter = converterMap.get(clazz);
 
         if(dataConverter == null)

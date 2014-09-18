@@ -4,7 +4,7 @@ import org.lalelu.brivel.brivelplus.selectors.dataconverter.DataConverter;
 
 import java.util.Map;
 
-public interface Selector<E> {
+public interface Selector<T> {
     public String selectField();
     public String tableField();
     public String whereField();
@@ -19,7 +19,7 @@ public interface Selector<E> {
 
     public String getAlias();
 
-    public Class<E> getType();
+    public Class<T> getType();
 
     public DataConverter getDataConverter();
     public void setDataConverter(DataConverter dataConverter);

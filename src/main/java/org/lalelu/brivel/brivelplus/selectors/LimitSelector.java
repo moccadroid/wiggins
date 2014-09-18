@@ -1,6 +1,6 @@
 package org.lalelu.brivel.brivelplus.selectors;
 
-public class LimitSelector extends DefaultSelector {
+public class LimitSelector<T> extends DefaultSelector<T> {
     private String limitField = null;
 
     public LimitSelector(String limit) {

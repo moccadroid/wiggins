@@ -18,7 +18,7 @@ public class DatabaseFacade {
         this.databaseAccessProvider = BrivelCentral.getDatabaseAccessProvider();
     }
 
-    public Request updateRequest(Request request) {
+    public <T> Request<T> updateRequest(Request<T> request) {
         if(!request.isUpdateCompiled()) {
             request.compileUpdate();
         }
@@ -28,7 +28,7 @@ public class DatabaseFacade {
         return request;
     }
 
-    public Request mergeRequest(Request request) {
+    public <T> Request<T> mergeRequest(Request<T> request) {
         if(!request.isInsertCompiled()) {
             request.compileInsert();
         }
@@ -38,7 +38,7 @@ public class DatabaseFacade {
         return request;
     }
 
-    public Request getResult(Request request) {
+    public <T> Request<T> getResult(Request<T> request) {
         try {
             if (!request.isSelectCompiled())
                 request.compileSelect();
@@ -48,30 +48,32 @@ public class DatabaseFacade {
 
             for (Object[] row : result) {
                 List<Selector<?>> selectSelectors = request.getSelectSelectors();
-                Class<?> klass = request.getKlass();
-                Object object = klass.newInstance();
+                
+                Class<T> klass = request.getKlass();
+                T object = klass.newInstance();
 
                 int selectorCounter = 0;
                 for(int i = 0; i < selectSelectors.size(); i++, selectorCounter = i) {
-                    Selector selector = selectSelectors.get(i);
+                    Selector<?> selector = selectSelectors.get(i);
                     if (object != null) {
                         Method method = klass.getMethod("set" + selector.getFieldName(), selector.getType());
                         method.invoke(object, selector.getDataConverter().read(row[i]));
                     }
                 }
 
-                List<Selector<?>> tmpSelectorList = new ArrayList<Selector<?>>();
-                tmpSelectorList.addAll(selectSelectors);
-                Map<String, Request> subRequests = request.getSubRequests();
-                for(Map.Entry<String, Request> entry : subRequests.entrySet()) {
-                    Request subRequest = entry.getValue();
-
-                    Class subKlass = subRequest.getKlass();
-                    Object subObject = subKlass.newInstance();
+                List<Selector<?>> tmpSelectorList = new ArrayList<Selector<?>>(selectSelectors);
+//                tmpSelectorList.addAll(selectSelectors);
+                Map<String, Request<?>> subRequests = request.getSubRequests();
+                for(Map.Entry<String, Request<?>> entry : subRequests.entrySet()) {
+                    Request<?> subRequest = entry.getValue();
+                    
+                    // missing type insurance!!
+                    Class<?> subKlass = subRequest.getKlass();
+                    Object subObject = subKlass.newInstance(); 
                     tmpSelectorList.addAll(subRequest.getSelectSelectors());
 
                     for(int i = selectorCounter; i < tmpSelectorList.size(); i++, selectorCounter++) {
-                        Selector selector = tmpSelectorList.get(i);
+                        Selector<?> selector = tmpSelectorList.get(i);
                         if (subObject != null) {
                             Method method = subKlass.getMethod("set" + selector.getFieldName(), selector.getType());
                             method.invoke(subObject, selector.getDataConverter().read(row[i]));
@@ -79,7 +81,7 @@ public class DatabaseFacade {
                     }
                     Method method = klass.getMethod("set" + entry.getKey(), subRequest.getKlass());
                     method.invoke(object, subObject);
-                    subRequest.addObject(subObject);
+                    subRequest.addObjectUnchecked(subObject);
                 }
                 request.addObject(object);
             }

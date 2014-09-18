@@ -6,19 +6,19 @@ import org.lalelu.brivel.brivelplus.selectors.Selector;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class InsertSqlCompiler<T> extends DefaultSqlCompiler {
+public class InsertSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
-    public String compile(RequestData data) {
+    public String compile(RequestData<T> data) {
         String insert = "INSERT INTO ";
         if(!data.getCompFromList().isEmpty()) {
-            Selector selector = (Selector) data.getCompFromList().get(0);
+            Selector<?> selector = (Selector<?>) data.getCompFromList().get(0);
 
             insert += selector.tableField() + " ";
         }
 
         String fields = "(";
         for(Object object : data.getCompSelectList()) {
-            Selector selector = (Selector) object;
+            Selector<?> selector = (Selector<?>) object;
             if(selector.selectField().equals("id"))
                 continue;
             fields += selector.selectField() + ",";
@@ -27,11 +27,11 @@ public class InsertSqlCompiler<T> extends DefaultSqlCompiler {
         fields += ")";
 
         String values = " VALUES ";
-        for(Object objectObject : data.getResultList()) {
-            T object = (T) objectObject;
+        for(Object object : data.getResultList()) {
+            // why? : T object = (T) objectObject;
             values += "(";
             for (Object selectorObject : data.getCompSelectList()) {
-                Selector selector = (Selector) selectorObject;
+                Selector<?> selector = (Selector<?>) selectorObject;
                 if(selector.selectField().equals("id"))
                     continue;
 

@@ -1,16 +1,14 @@
 package org.lalelu.brivel.brivelplus.requests;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.lalelu.brivel.brivelplus.requests.compiler.InsertSqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.SelectSqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.SqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.UpdateSqlCompiler;
-import org.lalelu.brivel.brivelplus.selectors.LimitSelector;
-import org.lalelu.brivel.brivelplus.selectors.OrderBySelector;
 import org.lalelu.brivel.brivelplus.selectors.Selector;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
 
 public class Request<T> {
 
@@ -70,7 +68,7 @@ public class Request<T> {
         return requestData.isUpdateCompiled();
     }
 
-    public void addSubRequest(String name, Request request) {
+    public void addSubRequest(String name, Request<?> request) {
         requestData.getSubRequests().put(name, request);
         request.setName(name);
         requestData.setUpdateCompiled(false);
@@ -78,7 +76,7 @@ public class Request<T> {
         requestData.setSelectCompiled(false);
     }
 
-    public Map<String, Request> getSubRequests() {
+    public Map<String, Request<?>> getSubRequests() {
         return requestData.getSubRequests();
     }
 
@@ -119,7 +117,15 @@ public class Request<T> {
     }
 
     public void addObject(T object) {
-        this.requestData.getResultList().add(object);
+    	this.requestData.getResultList().add(object);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void addObjectUnchecked(Object object) {
+    	if(requestData.getClass().isInstance(object))
+    		this.requestData.getResultList().add((T)object);
+    	else
+    		throw new ClassCastException("object is not of class T = " + requestData.getClass());
     }
 
     public void setName(String name) {
@@ -175,7 +181,7 @@ public class Request<T> {
         requestData.getCompWhereList().addAll(requestData.getWhereSelectors());
         requestData.getCompFromList().addAll(requestData.getFromSelectors());
 
-        for(Map.Entry<String, Request> entry : requestData.getSubRequests().entrySet()) {
+        for(Map.Entry<String, Request<?>> entry : requestData.getSubRequests().entrySet()) {
             if(!entry.getValue().isSelectCompiled())
                 entry.getValue().compileSelect();
 

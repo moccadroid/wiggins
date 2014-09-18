@@ -2,7 +2,7 @@ package org.lalelu.brivel.brivelplus.selectors;
 
 import java.util.List;
 
-public class WhereSelector extends DefaultSelector {
+public class WhereSelector<T> extends DefaultSelector<T> {
     private String whereField = null;
     private List<?> compareList = null;
 
