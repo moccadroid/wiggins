@@ -24,7 +24,12 @@ public class DefaultSelector implements Selector {
     }
 
     @Override
-    public String joinField() {
+    public String leftJoinSide() {
+        return null;
+    }
+
+    @Override
+    public String rightJoinSide() {
         return null;
     }
 

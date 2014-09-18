@@ -1,17 +1,14 @@
 package org.lalelu.brivel.brivelplus.selectors;
 
 public class JoinSelector extends DefaultSelector {
-    private String tableField = "";
-    private String fkString = "";
+    private String tableField = null;
+    private String leftJoinSide = null;
+    private String rightJoinSide = null;
 
-    public JoinSelector(String tableField, String fkString) {
+    public JoinSelector(String tableField, String leftJoinSide, String rightJoinSide) {
         this.tableField = tableField;
-        this.fkString = fkString;
-    }
-
-    @Override
-    public String selectField() {
-        return null;
+        this.leftJoinSide = leftJoinSide;
+        this.rightJoinSide = rightJoinSide;
     }
 
     @Override
@@ -20,7 +17,12 @@ public class JoinSelector extends DefaultSelector {
     }
 
     @Override
-    public String joinField() {
-        return fkString;
+    public String leftJoinSide() {
+        return leftJoinSide;
+    }
+
+    @Override
+    public String rightJoinSide() {
+        return rightJoinSide;
     }
 }

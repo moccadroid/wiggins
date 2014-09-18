@@ -8,7 +8,8 @@ public interface Selector<E> {
     public String selectField();
     public String tableField();
     public String whereField();
-    public String joinField();
+    public String leftJoinSide();
+    public String rightJoinSide();
     public String limitField();
     public String orderField();
 

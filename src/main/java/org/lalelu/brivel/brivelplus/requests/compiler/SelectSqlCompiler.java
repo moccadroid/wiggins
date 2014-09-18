@@ -31,12 +31,12 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler {
         String join = "";
         for(Object object : data.getCompJoinList()) {
             Selector selector = (Selector) object;
-            if(selector.joinField() == null || selector.joinField().isEmpty())
+            if(selector.leftJoinSide() == null || selector.leftJoinSide().isEmpty() || selector.rightJoinSide() == null || selector.rightJoinSide().isEmpty())
                 continue;
 
             String tmpJoin = " JOIN ";
             tmpJoin += selector.tableField() + " ON ";
-            tmpJoin += selector.joinField() + " = " + selector.tableField()+".id";
+            tmpJoin += selector.leftJoinSide() + " = " + selector.rightJoinSide();
 
             if(!join.contains(tmpJoin))
                 join += tmpJoin;

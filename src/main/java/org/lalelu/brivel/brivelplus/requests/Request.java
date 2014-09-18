@@ -89,6 +89,7 @@ public class Request<T> {
     public String getUpdateSql() {
         return requestData.getCompiledUpdateQuery();
     }
+
     public String getInsertSql() {
         return requestData.getCompiledInsertQuery();
     }
@@ -158,7 +159,7 @@ public class Request<T> {
         for(Selector<?> selector : requestData.getSelectorList()) {
             if(selector.selectField() != null)
                 requestData.getSelectSelectors().add(selector);
-            if(selector.joinField() != null)
+            if(selector.leftJoinSide() != null && selector.rightJoinSide() != null)
                 requestData.getJoinSelectors().add(selector);
             if(selector.whereField() != null)
                 requestData.getWhereSelectors().add(selector);

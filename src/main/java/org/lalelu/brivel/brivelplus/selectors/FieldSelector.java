@@ -11,7 +11,6 @@ public class FieldSelector extends DefaultSelector {
     private String fieldName = null;
     private Class klass = null;
     private String alias = "";
-    private final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public FieldSelector(String selectField, String tableField, Class klass) {
         this(selectField, tableField, (selectField.substring(0, 1).toUpperCase() + selectField.substring(1)), klass, DataConverterProvider.getDefaultDataConverter(klass));
@@ -28,10 +27,7 @@ public class FieldSelector extends DefaultSelector {
         this.klass = klass;
 
         // generate an alias
-        Random r = new Random();
-        for(int i = 0; i < 10; i++) {
-            alias += alphabet.charAt(r.nextInt(alphabet.length()));
-        }
+        alias = tableField + "_" + selectField;
 
         this.dataConverter = dataConverter;
     }
