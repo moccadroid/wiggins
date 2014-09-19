@@ -1,9 +1,11 @@
 package org.lalelu.brivel.brivelplus.requests;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.lalelu.brivel.brivelplus.database.DatabaseFacade.DataObjectAssembler;
 import org.lalelu.brivel.brivelplus.requests.compiler.InsertSqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.SelectSqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.SqlCompiler;
@@ -120,13 +122,11 @@ public class Request<T> {
     	this.requestData.getResultList().add(object);
     }
     
-    @SuppressWarnings("unchecked")
-	public void addObjectUnchecked(Object object) {
-    	if(requestData.getClass().isInstance(object))
-    		this.requestData.getResultList().add((T)object);
-    	else
-    		throw new ClassCastException("object is not of class T = " + requestData.getClass());
-    }
+    public T assembleAndAddObject(DataObjectAssembler assembler) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
+   		T object = assembler.<T>assembleObject(this);
+       	this.requestData.getResultList().add(object);
+       	return object;
+   	}
 
     public void setName(String name) {
         this.name = name;

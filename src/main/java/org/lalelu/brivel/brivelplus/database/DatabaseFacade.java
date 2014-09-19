@@ -1,15 +1,15 @@
 package org.lalelu.brivel.brivelplus.database;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.lalelu.brivel.brivelplus.BrivelCentral;
 import org.lalelu.brivel.brivelplus.database.provider.DatabaseAccessProvider;
 import org.lalelu.brivel.brivelplus.requests.Request;
 import org.lalelu.brivel.brivelplus.selectors.Selector;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class DatabaseFacade {
     private DatabaseAccessProvider databaseAccessProvider = null;
@@ -46,46 +46,11 @@ public class DatabaseFacade {
             String sql = request.getSelectSql();
             List<Object[]> result = databaseAccessProvider.getResultList(sql);
 
+            ReuseableDeepDataObjectAssembler assembler = new ReuseableDeepDataObjectAssembler();
             for (Object[] row : result) {
-                List<Selector<?>> selectSelectors = request.getSelectSelectors();
-                
-                Class<T> klass = request.getKlass();
-                T object = klass.newInstance();
-
-                int selectorCounter = 0;
-                for(int i = 0; i < selectSelectors.size(); i++, selectorCounter = i) {
-                    Selector<?> selector = selectSelectors.get(i);
-                    if (object != null) {
-                        Method method = klass.getMethod("set" + selector.getFieldName(), selector.getType());
-                        method.setAccessible(true);
-                        method.invoke(object, selector.getDataConverter().read(row[i]));
-                    }
-                }
-
-                List<Selector<?>> tmpSelectorList = new ArrayList<Selector<?>>(selectSelectors);
-//                tmpSelectorList.addAll(selectSelectors);
-                Map<String, Request<?>> subRequests = request.getSubRequests();
-                for(Map.Entry<String, Request<?>> entry : subRequests.entrySet()) {
-                    Request<?> subRequest = entry.getValue();
-                    
-                    // missing type insurance!!
-                    Class<?> subKlass = subRequest.getKlass();
-                    Object subObject = subKlass.newInstance(); 
-                    tmpSelectorList.addAll(subRequest.getSelectSelectors());
-
-                    for(int i = selectorCounter; i < tmpSelectorList.size(); i++, selectorCounter++) {
-                        Selector<?> selector = tmpSelectorList.get(i);
-                        if (subObject != null) {
-                            Method method = subKlass.getMethod("set" + selector.getFieldName(), selector.getType());
-                            method.setAccessible(true);
-                            method.invoke(subObject, selector.getDataConverter().read(row[i]));
-                        }
-                    }
-                    Method method = klass.getMethod("set" + entry.getKey(), subRequest.getKlass());
-                    method.invoke(object, subObject);
-                    subRequest.addObjectUnchecked(subObject);
-                }
-                request.addObject(object);
+            	assembler.selectorList = request.getSelectSelectors();
+            	assembler.values = row;
+            	request.assembleAndAddObject(assembler);
             }
 
         } catch (IllegalAccessException e) {
@@ -102,4 +67,43 @@ public class DatabaseFacade {
 
         return request;
     }
+    
+    public interface DataObjectAssembler {
+		public <E> E assembleObject(Request<E> request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException;
+	}
+	
+	protected class ReuseableDeepDataObjectAssembler implements DataObjectAssembler {
+		protected List<Selector<?>> selectorList;
+		protected Object[] values;
+		protected ReuseableDeepDataObjectAssembler dof = null; // init lazy or we run in trouble ...
+		
+		public <E> E assembleObject(Request<E> request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
+			Class<E> klass = request.getKlass();
+			E object = klass.newInstance();
+			
+			int cnt;
+            for(cnt = 0; cnt < selectorList.size(); cnt++) {
+                Selector<?> selector = selectorList.get(cnt);
+                Method method = klass.getMethod("set" + selector.getFieldName(), selector.getType());
+                method.invoke(object, selector.getDataConverter().read(values[cnt]));
+            }
+
+           
+            Map<String, Request<?>> subRequests = request.getSubRequests();
+            if(!subRequests.isEmpty() && dof == null) dof = new ReuseableDeepDataObjectAssembler();
+            for(Map.Entry<String, Request<?>> entry : subRequests.entrySet()) {
+            	Request<?> subRequest = entry.getValue();
+            	dof.selectorList = subRequest.getSelectSelectors();
+            	dof.values = Arrays.copyOfRange(values, cnt, dof.selectorList.size());
+            	cnt += dof.selectorList.size();
+            	
+            	Object subObject = subRequest.assembleAndAddObject(dof);
+                
+                Method method = klass.getMethod("set" + entry.getKey(), subRequest.getKlass());
+         		method.invoke(object, subObject);
+            }
+            request.addObject(object);
+            return object;
+		}
+	}
 }
