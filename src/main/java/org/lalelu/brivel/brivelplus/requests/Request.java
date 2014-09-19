@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.lalelu.brivel.brivelplus.database.DatabaseFacade.DataObjectAssembler;
+import org.lalelu.brivel.brivelplus.database.assembler.DataObjectAssembler;
 import org.lalelu.brivel.brivelplus.requests.compiler.InsertSqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.SelectSqlCompiler;
 import org.lalelu.brivel.brivelplus.requests.compiler.SqlCompiler;
@@ -191,5 +191,9 @@ public class Request<T> {
             requestData.getCompFromList().addAll(entry.getValue().getFromSelectors());
         }
 
+    }
+
+    public boolean isMany() {
+        return true;
     }
 }
