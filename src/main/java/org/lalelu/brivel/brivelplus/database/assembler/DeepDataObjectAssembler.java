@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 public class DeepDataObjectAssembler extends DefaultDataObjectAssembler {
+
+    @Override
     public <E> E assembleObject(Request<E> request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
         Class<E> klass = request.getKlass();
         E object = klass.newInstance();
