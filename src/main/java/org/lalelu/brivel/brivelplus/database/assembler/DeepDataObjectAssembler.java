@@ -1,14 +1,12 @@
 package org.lalelu.brivel.brivelplus.database.assembler;
 
-import org.lalelu.brivel.brivelplus.requests.Request;
-import org.lalelu.brivel.brivelplus.selectors.Selector;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+
+import org.lalelu.brivel.brivelplus.requests.Request;
+import org.lalelu.brivel.brivelplus.selectors.Selector;
 
 public class DeepDataObjectAssembler extends DefaultDataObjectAssembler {
 

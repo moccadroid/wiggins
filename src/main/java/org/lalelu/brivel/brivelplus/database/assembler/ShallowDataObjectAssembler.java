@@ -1,11 +1,10 @@
 package org.lalelu.brivel.brivelplus.database.assembler;
 
-import org.lalelu.brivel.brivelplus.requests.Request;
-import org.lalelu.brivel.brivelplus.selectors.Selector;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
+
+import org.lalelu.brivel.brivelplus.requests.Request;
+import org.lalelu.brivel.brivelplus.selectors.Selector;
 
 public class ShallowDataObjectAssembler extends DefaultDataObjectAssembler {
     @Override
