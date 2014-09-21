@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 
 public class BigDecimalDataConverter extends DefaultDataConverter {
     @Override
-    public Object read(Object object) {
-        Double decimal = Double.parseDouble(""+object);
-        return new BigDecimal(decimal);
+    public BigDecimal read(Object object) {
+        return new BigDecimal(String.valueOf(object));
     }
 }
