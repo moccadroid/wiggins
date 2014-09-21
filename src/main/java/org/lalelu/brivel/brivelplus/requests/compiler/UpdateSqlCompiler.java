@@ -15,8 +15,6 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
         try {
             for(Object object : data.getResultList()) {
-                // why? : T object = (T) objectObject;
-
                 String tableName = "tableName";
                 String update = "UPDATE ";
                 if (!data.getFromSelectors().isEmpty()) {

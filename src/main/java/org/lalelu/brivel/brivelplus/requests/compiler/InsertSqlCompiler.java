@@ -28,7 +28,6 @@ public class InsertSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
         String values = " VALUES ";
         for(Object object : data.getResultList()) {
-            // why? : T object = (T) objectObject;
             values += "(";
             for (Object selectorObject : data.getCompSelectList()) {
                 Selector<?> selector = (Selector<?>) selectorObject;
