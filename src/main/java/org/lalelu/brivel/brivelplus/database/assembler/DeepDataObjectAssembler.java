@@ -27,15 +27,24 @@ public class DeepDataObjectAssembler extends DefaultDataObjectAssembler {
 
         for(Map.Entry<String, Request<?>> entry : subRequests.entrySet()) {
             Request<?> subRequest = entry.getValue();
+            int numValuesProcessed = countValuesRequired(subRequest);
+            
             deepDataSubObjectAssembler.setSelectorList(subRequest.getSelectSelectors());
-            deepDataSubObjectAssembler.setValues( Arrays.copyOfRange(values, count, count + deepDataSubObjectAssembler.selectorList.size()));
-            count += deepDataSubObjectAssembler.selectorList.size();
+            deepDataSubObjectAssembler.setValues(Arrays.copyOfRange(values, count, count + numValuesProcessed));
 
             Object subObject = subRequest.assembleAndAddObject(deepDataSubObjectAssembler);
-
+            count += numValuesProcessed;
+            
             Method method = klass.getMethod("set" + entry.getKey(), subRequest.getKlass());
             method.invoke(object, subObject);
         }
         return object;
+    }
+    
+    private int countValuesRequired(Request<?> request) {
+    	int count = request.getSelectors().size();
+    	for(Request<?> subRequest : request.getSubRequests().values())
+    		count += countValuesRequired(subRequest);
+    	return count;
     }
 }
