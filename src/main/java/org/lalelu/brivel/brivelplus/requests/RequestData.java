@@ -34,6 +34,11 @@ public class RequestData<T> {
     private String compiledInsertQuery = "";
     private String compiledUpdateQuery = "";
 
+    private String getMethodName = null;
+    private String setMethodName = null;
+
+    private boolean isMany = false;
+
     private List<T> resultList = new ArrayList<T>();
 
     private Map<String, Request<?>> subRequests = new HashMap<String, Request<?>>();
@@ -196,5 +201,29 @@ public class RequestData<T> {
 
     public void setSubRequests(Map<String, Request<?>> subRequests) {
         this.subRequests = subRequests;
+    }
+
+    public String getGetMethodName() {
+        return getMethodName;
+    }
+
+    public void setGetMethodName(String getMethodName) {
+        this.getMethodName = getMethodName;
+    }
+
+    public String getSetMethodName() {
+        return setMethodName;
+    }
+
+    public void setSetMethodName(String setMethodName) {
+        this.setMethodName = setMethodName;
+    }
+
+    public boolean isMany() {
+        return isMany;
+    }
+
+    public void setMany(boolean isMany) {
+        this.isMany = isMany;
     }
 }

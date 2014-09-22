@@ -70,12 +70,46 @@ public class Request<T> {
         return requestData.isUpdateCompiled();
     }
 
-    public void addSubRequest(String name, Request<?> request) {
-        requestData.getSubRequests().put(name, request);
-        request.setName(name);
+    public void addSubRequest(String methodName, Request<?> request) {
+        requestData.getSubRequests().put(methodName, request);
+        request.setName(methodName);
         requestData.setUpdateCompiled(false);
         requestData.setInsertCompiled(false);
         requestData.setSelectCompiled(false);
+    }
+
+    public void addSubRequest(String setMethodName, String getMethodName, Request<?> request, boolean isMany) {
+        request.setSetMethodName(setMethodName);
+        request.setGetMethodName(getMethodName);
+        request.setMany(isMany);
+        requestData.getSubRequests().put(setMethodName, request);
+        requestData.setUpdateCompiled(false);
+        requestData.setInsertCompiled(false);
+        requestData.setSelectCompiled(false);
+    }
+
+    public void setSetMethodName(String setMethodName) {
+        this.requestData.setSetMethodName(setMethodName);
+    }
+
+    public void setGetMethodName(String getMethodName) {
+        this.requestData.setGetMethodName(getMethodName);
+    }
+
+    public String getSetMethodName() {
+        return requestData.getSetMethodName();
+    }
+
+    public String getGetMethodName() {
+        return requestData.getGetMethodName();
+    }
+
+    public void setMany(boolean many) {
+        this.requestData.setMany(many);
+    }
+
+    public boolean isMany() {
+        return requestData.isMany();
     }
 
     public Map<String, Request<?>> getSubRequests() {
@@ -195,9 +229,5 @@ public class Request<T> {
             requestData.getCompFromList().addAll(entry.getValue().getFromSelectors());
         }
 
-    }
-
-    public boolean isMany() {
-        return true;
     }
 }
