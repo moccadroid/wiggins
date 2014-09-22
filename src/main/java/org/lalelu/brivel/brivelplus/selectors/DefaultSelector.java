@@ -44,6 +44,16 @@ public class DefaultSelector<T> implements Selector<T> {
     }
 
     @Override
+    public boolean isKey() {
+        return false;
+    }
+
+    @Override
+    public void setKey(boolean key) {
+
+    }
+
+    @Override
     public Map<String, Object> getParameters() {
         return null;
     }

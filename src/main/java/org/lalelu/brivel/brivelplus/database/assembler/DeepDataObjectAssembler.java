@@ -9,6 +9,8 @@ import org.lalelu.brivel.brivelplus.requests.Request;
 import org.lalelu.brivel.brivelplus.selectors.Selector;
 
 public class DeepDataObjectAssembler extends DefaultDataObjectAssembler {
+    Object currentObject = null;
+    String currentKeyValue = "";
 
     @Override
     public <E> E assembleObject(Request<E> request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
@@ -18,7 +20,18 @@ public class DeepDataObjectAssembler extends DefaultDataObjectAssembler {
         int count;
         for(count = 0; count < selectorList.size(); count++) {
             Selector<?> selector = selectorList.get(count);
-            Method method = klass.getMethod("set" + selector.getFieldName(), selector.getType());
+
+            if(selector.isKey()) {
+                if(!currentKeyValue.equals(values[count]+"")) {
+                    currentObject = object;
+                } else {
+                    if(currentObject != null)
+                        object = (E) currentObject;
+                }
+                currentKeyValue = "" + values[count];
+            }
+
+            Method method = klass.getMethod(selector.getFieldName(), selector.getType());
             method.invoke(object, selector.getDataConverter().read(values[count]));
         }
 
@@ -35,7 +48,7 @@ public class DeepDataObjectAssembler extends DefaultDataObjectAssembler {
             Object subObject = subRequest.assembleAndAddObject(deepDataSubObjectAssembler);
             count += numValuesProcessed;
             
-            Method method = klass.getMethod("set" + entry.getKey(), subRequest.getKlass());
+            Method method = klass.getMethod(entry.getKey(), subRequest.getKlass());
             method.invoke(object, subObject);
         }
         return object;

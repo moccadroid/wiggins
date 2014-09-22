@@ -13,6 +13,9 @@ public interface Selector<T> {
     public String limitField();
     public String orderField();
 
+    public boolean isKey();
+    public void setKey(boolean key);
+
     public Map<String, Object> getParameters();
 
     public String getFieldName();

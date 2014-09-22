@@ -25,7 +25,7 @@ public class DeepDataObjectAssemblerTest {
 	@Test
 	public void testSimpleRequest() {
 		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
+		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
 		
 		Integer value = Integer.valueOf(42);
 		assembler.setSelectorList(request.getSelectors());
@@ -45,11 +45,11 @@ public class DeepDataObjectAssemblerTest {
 	@Test
 	public void testRequestWithOneSubRequest() {
 		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
+		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
 		
 		Request<TestData> subRequest = new Request<TestData>(TestData.class);
-		subRequest.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
-		request.addSubRequest("SubData", subRequest);
+		subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+		request.addSubRequest("setSubData", subRequest);
 		
 		request.compileSelect();
 		
@@ -86,21 +86,21 @@ public class DeepDataObjectAssemblerTest {
 		}
 		
 		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
+		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
 		
 		Request<TestData> prevRequest = request;
 		for(int i = p; i < k; i++) {
 			Request<TestData> subRequest = new Request<TestData>(TestData.class);
-			subRequest.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
-			prevRequest.addSubRequest("OtherSubData", subRequest);
+			subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+			prevRequest.addSubRequest("setOtherSubData", subRequest);
 			prevRequest = subRequest;
 		}
 		
 		prevRequest = request;
 		for(int i = 1; i < p; i++) {
 			Request<TestData> subRequest = new Request<TestData>(TestData.class);
-			subRequest.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
-			prevRequest.addSubRequest("SubData", subRequest);
+			subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+			prevRequest.addSubRequest("setSubData", subRequest);
 			prevRequest = subRequest;
 		}
 		
@@ -149,14 +149,14 @@ public class DeepDataObjectAssemblerTest {
 		List<Request<TestData>> list = new ArrayList<Request<TestData>>();
 		
 		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
+		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
 		list.add(request);
 		
 		Request<TestData> prevRequest = request;
 		for(int i = 1; i < k; i++) {
 			Request<TestData> subRequest = new Request<TestData>(TestData.class);
-			subRequest.addSelector(new FieldSelector<Object>("", "", "TestField", Object.class));
-			prevRequest.addSubRequest("SubData", subRequest);
+			subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+			prevRequest.addSubRequest("setSubData", subRequest);
 			prevRequest = subRequest;
 		}
 		

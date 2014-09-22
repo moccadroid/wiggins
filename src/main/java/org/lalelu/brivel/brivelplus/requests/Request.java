@@ -124,7 +124,11 @@ public class Request<T> {
     
     public T assembleAndAddObject(DataObjectAssembler assembler) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
    		T object = assembler.<T>assembleObject(this);
-       	this.requestData.getResultList().add(object);
+
+        // TODO: this should be very slow... change!
+        if(!requestData.getResultList().contains(object))
+       	    this.requestData.getResultList().add(object);
+
        	return object;
    	}
 

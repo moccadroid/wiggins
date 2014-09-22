@@ -9,9 +9,10 @@ public class FieldSelector<T> extends DefaultSelector<T> {
     private String fieldName = null;
     private Class<T> klass = null;
     private String alias = "";
+    private boolean key = false;
 
     public FieldSelector(String selectField, String tableField, Class<T> klass) {
-        this(selectField, tableField, (selectField.substring(0, 1).toUpperCase() + selectField.substring(1)), klass, DataConverterProvider.getDefaultDataConverter(klass));
+        this(selectField, tableField, "set" + (selectField.substring(0, 1).toUpperCase() + selectField.substring(1)), klass, DataConverterProvider.getDefaultDataConverter(klass));
     }
 
     public FieldSelector(String selectField, String tableField, String fieldName, Class<T> klass) {
@@ -28,6 +29,15 @@ public class FieldSelector<T> extends DefaultSelector<T> {
         alias = tableField + "_" + selectField;
 
         this.dataConverter = dataConverter;
+    }
+
+    @Override
+    public void setKey(boolean key) {
+        this.key = key;
+    }
+
+    public boolean isKey() {
+        return key;
     }
 
     @Override
