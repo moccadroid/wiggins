@@ -6,6 +6,7 @@ import org.lalelu.brivel.brivelplus.database.provider.DefaultDatabaseAccessProvi
 public class BrivelCentral {
     private static DatabaseAccessProvider databaseAccessProvider = null;
 
+    // schau
     public static DatabaseAccessProvider getDatabaseAccessProvider() {
         if(databaseAccessProvider == null)
             databaseAccessProvider = new DefaultDatabaseAccessProvider();
