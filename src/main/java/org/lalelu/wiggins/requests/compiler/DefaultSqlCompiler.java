@@ -1,6 +1,6 @@
 package org.lalelu.wiggins.requests.compiler;
 
-import org.lalelu.wiggins.requests.RequestData;
+import org.lalelu.wiggins.requests.sql.RequestData;
 
 public class DefaultSqlCompiler<T> implements SqlCompiler<T> {
     @Override

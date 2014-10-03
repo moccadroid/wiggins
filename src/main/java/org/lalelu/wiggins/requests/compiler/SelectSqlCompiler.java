@@ -1,7 +1,7 @@
 package org.lalelu.wiggins.requests.compiler;
 
-import org.lalelu.wiggins.requests.RequestData;
-import org.lalelu.wiggins.selectors.Selector;
+import org.lalelu.wiggins.requests.sql.RequestData;
+import org.lalelu.wiggins.selectors.sql.Selector;
 
 public class SelectSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
