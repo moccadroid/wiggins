@@ -2,7 +2,7 @@ package org.lalelu.wiggins.data;
 
 import java.util.List;
 
-import org.lalelu.wiggins.BrivelCentral;
+import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.assembler.sql.SqlDeepDataObjectAssembler;
 import org.lalelu.wiggins.data.provider.DatabaseAccessProvider;
 import org.lalelu.wiggins.errors.ErrorHandler;
@@ -12,7 +12,7 @@ public class DatabaseFacade {
     private DatabaseAccessProvider databaseAccessProvider = null;
 
     public DatabaseFacade() {
-        this.databaseAccessProvider = BrivelCentral.getDatabaseAccessProvider();
+        this.databaseAccessProvider = WigginsCentral.getDatabaseAccessProvider();
     }
 
     public <T> Request<T> updateRequest(Request<T> request) {

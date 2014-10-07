@@ -17,6 +17,7 @@ public class JsonObjectModel {
     private Object currentObject = null;
 
     private String field = "";
+    private JsonObjectModel parent = null;
 
     public JsonObjectModel(Class klass) {
         this.klass = klass;
@@ -40,16 +41,21 @@ public class JsonObjectModel {
         isInObject = false;
     }
 
+    public void setParent(String field, JsonObjectModel parent) {
+        this.field = field;
+        this.parent = parent;
+    }
+
+    public JsonObjectModel getParent() {
+        return parent;
+    }
+
     public Object getCurrentObject() {
         return currentObject;
     }
 
     public Integer getObjectIndex() {
         return objectIndex;
-    }
-
-    public void setInObject(boolean isInObject) {
-        this.isInObject = isInObject;
     }
 
     public boolean isInObject() {
@@ -62,11 +68,6 @@ public class JsonObjectModel {
 
     public String getField() {
         return this.field;
-    }
-
-    public void check() throws IllegalAccessException, InstantiationException {
-        if(currentObject == null)
-            currentObject = klass.newInstance();
     }
 
     public Object assembleObject(Class targetClass, String targetField, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {

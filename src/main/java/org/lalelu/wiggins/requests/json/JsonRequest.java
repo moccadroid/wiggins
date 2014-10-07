@@ -1,5 +1,7 @@
 package org.lalelu.wiggins.requests.json;
 
+import org.lalelu.wiggins.WigginsCentral;
+import org.lalelu.wiggins.data.jsonparser.JsonParser;
 import org.lalelu.wiggins.selectors.json.JsonSelector;
 
 import java.lang.reflect.InvocationTargetException;
@@ -45,6 +47,13 @@ public class JsonRequest<T> {
         }
         objectModels.add(objectModel);
         isCompiled = false;
+    }
+
+    public ArrayList<T> getResult(String json) {
+        JsonParser jsonParser = WigginsCentral.getJsonParser();
+        Map<String, Object> map = jsonParser.parseJson(json);
+
+        return getResult(map);
     }
 
     public ArrayList<T> getResult(Map<String, Object> map) {
@@ -139,8 +148,9 @@ public class JsonRequest<T> {
                         if(objectModel.getObjectIndex().equals(0)) {
                             if(objectModel.isInObject()) {
                                 if(!objectModel.equals(mainObjectModel)) {
-                                    Method method = mainObjectModel.getKlass().getMethod(objectModel.getField(), objectModel.getKlass());
-                                    method.invoke(mainObjectModel.getCurrentObject(), objectModel.getCurrentObject());
+                                    JsonObjectModel parent = objectModel.getParent();
+                                    Method method = parent.getKlass().getMethod(objectModel.getField(), objectModel.getKlass());
+                                    method.invoke(parent.getCurrentObject(), objectModel.getCurrentObject());
                                 } else {
                                     objectList.add(klass.cast(objectModel.getCurrentObject()));
                                 }
