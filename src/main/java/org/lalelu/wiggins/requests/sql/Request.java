@@ -159,7 +159,7 @@ public class Request<T> {
     public T assembleAndAddObject(DataObjectAssembler assembler) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
    		T object = assembler.<T>assembleObject(this);
 
-        // TODO: this should be very slow... change!
+        // TODO: this should be very slow... change! Maybe a Map for constant access?
         if(!requestData.getResultList().contains(object))
        	    this.requestData.getResultList().add(object);
 
