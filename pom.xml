@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.lalelu</groupId>
-    <artifactId>brivelPlus</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <artifactId>wiggins</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
