@@ -21,6 +21,8 @@ public class CsvRequest<T> {
     private CsvObjectModel mainObjectModel = null;
     private List<CsvObjectModel> objectModels = new ArrayList<CsvObjectModel>();
 
+    private boolean isNoHeader = false;
+
     public CsvRequest(Class klass) {
         this.klass = klass;
     }
@@ -28,6 +30,10 @@ public class CsvRequest<T> {
     public void compile() {
 
         isCompiled = true;
+    }
+
+    public void setIsNoHeader(boolean isNoHeader) {
+        this.isNoHeader = isNoHeader;
     }
 
     public void addObjectModel(CsvObjectModel objectModel) {
@@ -49,7 +55,11 @@ public class CsvRequest<T> {
             if(rowList.size() > 0) {
                 header = rowList.get(0);
                 createHeaderMap(header);
-                rowList.remove(0);
+
+                // if we have a header then remove the first line
+                if(!isNoHeader)
+                    rowList.remove(0);
+
             } else {
                 return objectList;
             }
@@ -65,7 +75,10 @@ public class CsvRequest<T> {
                             if (objectModel != null) {
                                 objectModel.createObject();
 
-                                objectModel.assembleObject(header[i], row[i]);
+                                if(isNoHeader)
+                                    objectModel.assembleObject(""+i, row[i]);
+                                else
+                                    objectModel.assembleObject(header[i], row[i]);
                                 if (objectModel.getObjectIndex().equals(0)) {
                                     if (objectModel.equals(mainObjectModel)) {
                                         objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
@@ -82,15 +95,18 @@ public class CsvRequest<T> {
             }
 
         } catch (Exception e) {
-            //LOG.error("getResult", e);
         }
         return objectList;
     }
 
     private void createHeaderMap(String[] header) {
         for(int i = 0; i < header.length; i++) {
+            String field = header[i];
+            if(isNoHeader)
+                field = "" + i;
+
             for(CsvObjectModel objectModel : objectModels) {
-                if(objectModel.containsObjectField(header[i])) {
+                if(objectModel.containsObjectField(field)) {
                     if(headerMap.containsKey(i)) {
                         headerMap.get(i).add(objectModel);
                     } else {
