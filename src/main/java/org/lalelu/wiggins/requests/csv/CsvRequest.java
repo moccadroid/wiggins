@@ -1,20 +1,21 @@
 package org.lalelu.wiggins.requests.csv;
 
-import org.lalelu.wiggins.WigginsCentral;
-import org.lalelu.wiggins.data.csvparser.CsvParser;
-
-import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.lalelu.wiggins.WigginsCentral;
+import org.lalelu.wiggins.data.csvparser.CsvParser;
+
 public class CsvRequest<T> {
 
     private Class<T> klass = null;
     private List<T> objectList = new ArrayList<T>();
-    private boolean isCompiled = false;
+    
+    @SuppressWarnings("unused") // TODO
+	private boolean isCompiled = false;
 
     private Map<Integer, List<CsvObjectModel>> headerMap = new HashMap<Integer, List<CsvObjectModel>>();
 
@@ -23,7 +24,7 @@ public class CsvRequest<T> {
 
     private boolean isNoHeader = false;
 
-    public CsvRequest(Class klass) {
+    public CsvRequest(Class<T> klass) {
         this.klass = klass;
     }
 

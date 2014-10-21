@@ -1,46 +1,50 @@
 package org.lalelu.wiggins.requests.json;
 
-import org.lalelu.wiggins.selectors.json.JsonSelector;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.lalelu.wiggins.selectors.json.JsonSelector;
+
 public class JsonRequestBuilder<T> {
     private Map<String, JsonObjectModel> conditions = new LinkedHashMap<String, JsonObjectModel>();
-    private Class klass = null;
+    private Class<T> klass = null;
 
-    public JsonRequestBuilder(Class klass) {
+    public JsonRequestBuilder(Class<T> klass) {
         this.klass = klass;
     }
 
-    public void addObjectCondition(String condition, Class objectKlass) {
+    public void addObjectCondition(String condition, Class<T> objectKlass) {
         conditions.put("-object:"+condition, new JsonObjectModel(objectKlass));
     }
 
     public JsonRequest<T> buildRequestFromFile(String mappingUrl) throws IOException {
 
-        BufferedReader br = new BufferedReader(new FileReader(mappingUrl));
-        StringBuilder mappingString = new StringBuilder();
-        String line = br.readLine();
-
-        while(line != null) {
-            line = line.trim();
-
-            if(line.startsWith("#") || line.isEmpty()) {
-                line = br.readLine();
-                continue;
-            }
-
-            mappingString.append(line + "\n");
-
-            line = br.readLine();
+        try(BufferedReader br = new BufferedReader(new FileReader(mappingUrl))) {
+	        StringBuilder mappingString = new StringBuilder();
+	        String line = br.readLine();
+	
+	        while(line != null) {
+	            line = line.trim();
+	
+	            if(line.startsWith("#") || line.isEmpty()) {
+	                line = br.readLine();
+	                continue;
+	            }
+	
+	            mappingString.append(line + "\n");
+	
+	            line = br.readLine();
+	        }
+	        return buildRequest(mappingString.toString());
         }
-        return buildRequest(mappingString.toString());
     }
 
-    public JsonRequest buildRequestFromString(String mappingString) throws IOException {
+    public JsonRequest<T> buildRequestFromString(String mappingString) throws IOException {
         return buildRequest(mappingString);
     }
 

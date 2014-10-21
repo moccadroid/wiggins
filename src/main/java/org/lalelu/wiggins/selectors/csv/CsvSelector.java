@@ -12,5 +12,5 @@ public interface CsvSelector {
 
     public String getObjectField();
 
-    public Class getFieldType();
+    public Class<?> getFieldType();
 }

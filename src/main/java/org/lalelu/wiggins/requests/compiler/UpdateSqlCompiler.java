@@ -1,14 +1,14 @@
 package org.lalelu.wiggins.requests.compiler;
 
-import org.lalelu.wiggins.requests.sql.Request;
-import org.lalelu.wiggins.requests.sql.RequestData;
-import org.lalelu.wiggins.selectors.sql.Selector;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.lalelu.wiggins.requests.sql.Request;
+import org.lalelu.wiggins.requests.sql.RequestData;
+import org.lalelu.wiggins.selectors.sql.Selector;
 
 public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
@@ -65,7 +65,8 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
                     if(subRequest.isMany()) {
                         if(subObject instanceof Collection<?>) {
-                            List<Object> objectList = (List<Object>) subObject;
+                            @SuppressWarnings("unchecked") // TODO check if thats a valid cast (and remove the todo if so)
+							List<Object> objectList = (List<Object>) subObject;
                             System.out.println(objectList.size());
                             for(Object o : objectList) {
                                 compiledUpdateQuery += createUpdate(subRequest, o) + "; ";
@@ -94,7 +95,7 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
         return compiledUpdateQuery;
     }
 
-    private String createUpdate(Request request, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private String createUpdate(Request<?> request, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String tableName = "tableName";
         String update = "UPDATE ";
         if (!request.getFromSelectors().isEmpty()) {

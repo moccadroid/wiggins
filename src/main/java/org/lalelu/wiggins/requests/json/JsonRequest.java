@@ -1,12 +1,17 @@
 package org.lalelu.wiggins.requests.json;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
 import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.jsonparser.JsonParser;
 import org.lalelu.wiggins.selectors.json.JsonSelector;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
 
 public class JsonRequest<T> {
     private Class<T> klass = null;
@@ -88,7 +93,7 @@ public class JsonRequest<T> {
 
     private String getCurrentPath() {
         String curPath = "";
-        Iterator iter = currentPath.iterator();
+        Iterator<String> iter = currentPath.iterator();
         while(iter.hasNext()) {
             curPath += iter.next() + "/";
         }
@@ -137,7 +142,7 @@ public class JsonRequest<T> {
             }
         } else if(object instanceof Map) {
             @SuppressWarnings("unchecked")
-            Iterator<Map.Entry<String, Object>> iter = ((Map)object).entrySet().iterator();
+            Iterator<Map.Entry<String, Object>> iter = ((Map<String,Object>)object).entrySet().iterator();
             while(iter.hasNext()) {
                 Map.Entry<String, Object> entry = iter.next();
                 if(entry.getValue() != null) {

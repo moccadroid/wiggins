@@ -26,7 +26,7 @@ public class SqlDeepDataObjectAssembler extends SqlDefaultDataObjectAssembler {
                     currentObject = object;
                 } else {
                     if(currentObject != null)
-                        object = (E) currentObject;
+                        object = request.getKlass().cast(currentObject);
                 }
                 currentKeyValue = "" + values[count];
             }

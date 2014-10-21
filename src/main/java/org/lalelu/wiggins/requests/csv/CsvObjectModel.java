@@ -1,16 +1,19 @@
 package org.lalelu.wiggins.requests.csv;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.lalelu.wiggins.selectors.csv.CsvCombinedFieldSelector;
-import org.lalelu.wiggins.selectors.csv.CsvFieldSelector;
 import org.lalelu.wiggins.selectors.csv.CsvDefaultValueSelector;
 import org.lalelu.wiggins.selectors.csv.CsvSelector;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-
 public class CsvObjectModel {
-    private Class klass = null;
+    private Class<?> klass = null;
     private Map<String, List<CsvSelector>> selectorMap = new LinkedHashMap<String, List<CsvSelector>>();
     private Integer objectIndex = 0;
     private Integer objectLength = 0;
@@ -21,11 +24,11 @@ public class CsvObjectModel {
     private String field = "";
     private CsvObjectModel parent = null;
 
-    public CsvObjectModel(Class klass) {
+    public CsvObjectModel(Class<?> klass) {
         this.klass = klass;
     }
 
-    public Class getKlass() {
+    public Class<?> getKlass() {
         return klass;
     }
 

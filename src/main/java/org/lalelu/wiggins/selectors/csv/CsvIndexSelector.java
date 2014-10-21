@@ -7,13 +7,13 @@ public class CsvIndexSelector implements CsvSelector {
     private Integer index;
     private String objectField;
     private DataConverter dataConverter = null;
-    private Class fieldType = null;
+    private Class<?> fieldType = null;
 
-    public CsvIndexSelector(Integer index, String objectField, Class fieldType) {
+    public CsvIndexSelector(Integer index, String objectField, Class<?> fieldType) {
         this(index, objectField, fieldType, new DefaultDataConverter());
     }
 
-    public CsvIndexSelector(Integer index, String objectField, Class fieldType, DataConverter dataConverter) {
+    public CsvIndexSelector(Integer index, String objectField, Class<?> fieldType, DataConverter dataConverter) {
         this.index = index;
         this.objectField = objectField;
         this.fieldType = fieldType;
@@ -41,7 +41,7 @@ public class CsvIndexSelector implements CsvSelector {
     }
 
     @Override
-    public Class getFieldType() {
+    public Class<?> getFieldType() {
         return fieldType;
     }
 }

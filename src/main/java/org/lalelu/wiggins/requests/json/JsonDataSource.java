@@ -6,7 +6,9 @@ import org.lalelu.wiggins.net.FileRetriever;
 public class JsonDataSource {
     private String url = "";
     private String mappingFileUrl = "";
-    private FileRetriever fileRetriever = null;
+    
+    @SuppressWarnings("unused") // TODO
+	private FileRetriever fileRetriever = null;
 
     public JsonDataSource() {
         fileRetriever = new DefaultFileRetriever();
