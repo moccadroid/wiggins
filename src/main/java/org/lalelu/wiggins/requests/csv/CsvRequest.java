@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.csvparser.CsvParser;
+import org.lalelu.wiggins.errors.ExceptionPool;
 
 public class CsvRequest<T> {
 
@@ -97,7 +98,7 @@ public class CsvRequest<T> {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            ExceptionPool.getInstance().addException(e);
         }
         return objectList;
     }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.lalelu.wiggins.errors.ExceptionPool;
 import org.lalelu.wiggins.selectors.json.JsonSelector;
 
 public class JsonRequestBuilder<T> {
@@ -18,30 +19,29 @@ public class JsonRequestBuilder<T> {
         this.klass = klass;
     }
 
-    public void addObjectCondition(String condition, Class<T> objectKlass) {
+    public void addObjectCondition(String condition, Class objectKlass) {
         conditions.put("-object:"+condition, new JsonObjectModel(objectKlass));
     }
 
     public JsonRequest<T> buildRequestFromFile(String mappingUrl) throws IOException {
 
-        try(BufferedReader br = new BufferedReader(new FileReader(mappingUrl))) {
-	        StringBuilder mappingString = new StringBuilder();
-	        String line = br.readLine();
-	
-	        while(line != null) {
-	            line = line.trim();
-	
-	            if(line.startsWith("#") || line.isEmpty()) {
-	                line = br.readLine();
-	                continue;
-	            }
-	
-	            mappingString.append(line + "\n");
-	
-	            line = br.readLine();
-	        }
-	        return buildRequest(mappingString.toString());
+        BufferedReader br = new BufferedReader(new FileReader(mappingUrl));
+        StringBuilder mappingString = new StringBuilder();
+        String line = br.readLine();
+
+        while(line != null) {
+            line = line.trim();
+
+            if(line.startsWith("#") || line.isEmpty()) {
+                line = br.readLine();
+                continue;
+            }
+
+            mappingString.append(line + "\n");
+
+            line = br.readLine();
         }
+        return buildRequest(mappingString.toString());
     }
 
     public JsonRequest<T> buildRequestFromString(String mappingString) throws IOException {

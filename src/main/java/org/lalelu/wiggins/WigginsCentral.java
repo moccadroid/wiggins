@@ -12,6 +12,8 @@ public class WigginsCentral {
     private static JsonParser jsonParser = null;
     private static CsvParser csvParser = null;
 
+    private static boolean printStackTrace = false;
+
     public static DatabaseAccessProvider getDatabaseAccessProvider() {
         if(WigginsCentral.databaseAccessProvider == null)
             WigginsCentral.databaseAccessProvider = new DefaultDatabaseAccessProvider();
@@ -43,5 +45,13 @@ public class WigginsCentral {
             WigginsCentral.csvParser = new DefaultCsvParser();
 
         return WigginsCentral.csvParser;
+    }
+
+    public static void setPrintStackTrace(boolean printStackTrace) {
+        WigginsCentral.printStackTrace = printStackTrace;
+    }
+
+    public static boolean isPrintStackTrace() {
+        return WigginsCentral.printStackTrace;
     }
 }
