@@ -6,11 +6,14 @@ public class WGS84DataConverter extends DefaultDataConverter {
     @Override
     public Object read(Object object) {
         BigDecimal coord = new BigDecimal(0);
-        if(object instanceof String) {
-            String strCoord = ((String)object).replace(",", ".");
-            coord = new BigDecimal(strCoord);
-        }
+        try {
+            if (object instanceof String) {
+                String strCoord = ((String) object).replace(",", ".");
+                coord = new BigDecimal(strCoord);
+            }
+        } catch (NumberFormatException e) {
 
+        }
         return coord;
     }
 }

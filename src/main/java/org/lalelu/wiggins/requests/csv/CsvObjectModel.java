@@ -85,7 +85,7 @@ public class CsvObjectModel {
 
     public Object assembleObject(String csvHeader, String csvField) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         List<CsvSelector> list = selectorMap.get(csvHeader);
-        System.out.println(list);
+
         if(list != null) {
             for(CsvSelector selector : list) {
                 if(selector instanceof CsvCombinedFieldSelector) {

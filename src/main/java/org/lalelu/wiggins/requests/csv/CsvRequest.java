@@ -80,6 +80,7 @@ public class CsvRequest<T> {
                                     objectModel.assembleObject(""+i, row[i]);
                                 else
                                     objectModel.assembleObject(header[i], row[i]);
+
                                 if (objectModel.getObjectIndex().equals(0)) {
                                     if (objectModel.equals(mainObjectModel)) {
                                         objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
@@ -96,6 +97,7 @@ public class CsvRequest<T> {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return objectList;
     }
@@ -103,6 +105,7 @@ public class CsvRequest<T> {
     private void createHeaderMap(String[] header) {
         for(int i = 0; i < header.length; i++) {
             String field = header[i];
+
             if(isNoHeader)
                 field = "" + i;
 
