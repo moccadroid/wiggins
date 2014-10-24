@@ -8,15 +8,13 @@ import java.util.Map;
 
 import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.csvparser.CsvParser;
+import org.lalelu.wiggins.errors.ExceptionHandler;
 import org.lalelu.wiggins.errors.ExceptionPool;
 
 public class CsvRequest<T> {
 
     private Class<T> klass = null;
     private List<T> objectList = new ArrayList<T>();
-    
-    @SuppressWarnings("unused") // TODO
-	private boolean isCompiled = false;
 
     private Map<Integer, List<CsvObjectModel>> headerMap = new HashMap<Integer, List<CsvObjectModel>>();
 
@@ -29,11 +27,6 @@ public class CsvRequest<T> {
         this.klass = klass;
     }
 
-    public void compile() {
-
-        isCompiled = true;
-    }
-
     public void setIsNoHeader(boolean isNoHeader) {
         this.isNoHeader = isNoHeader;
     }
@@ -44,10 +37,16 @@ public class CsvRequest<T> {
         }
 
         objectModels.add(objectModel);
-        isCompiled = false;
+    }
+
+    public ExceptionHandler getExceptions() {
+        return ExceptionPool.getInstance().getExceptionHandler(this);
     }
 
     public List<T> getResult(String csvString) {
+        // register this request with the exceptionPool
+        ExceptionPool.getInstance().register(this);
+
         List<String[]> rowList;
         CsvParser csvParser = WigginsCentral.getCsvParser();
         String[] header;

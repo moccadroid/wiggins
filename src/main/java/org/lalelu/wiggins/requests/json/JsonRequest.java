@@ -23,7 +23,7 @@ public class JsonRequest<T> {
 
     private ArrayList<JsonObjectModel> objectModels = new ArrayList<JsonObjectModel>();
     private JsonObjectModel mainObjectModel = null;
-    private Map<String, JsonObjectModel> objectModelMap = new HashMap<String, JsonObjectModel>();
+    private Map<String, List<JsonObjectModel>> objectModelMap = new HashMap<String, List<JsonObjectModel>>();
 
     private boolean isCompiled = false;
 
@@ -35,8 +35,14 @@ public class JsonRequest<T> {
         pathMap.clear();
         for(JsonObjectModel objectModel : objectModels) {
             for (JsonSelector selector : objectModel.getSelectors()) {
-                pathMap.put(selector.getSelectorPath(), selector.getField());
-                objectModelMap.put(selector.getSelectorPath(), objectModel);
+                pathMap.put(selector.getSelectorPath(), selector.getObjectField());
+                if(objectModelMap.containsKey(selector.getSelectorPath())) {
+                    objectModelMap.get(selector.getSelectorPath()).add(objectModel);
+                } else {
+                    List<JsonObjectModel> list = new ArrayList<JsonObjectModel>();
+                    list.add(objectModel);
+                    objectModelMap.put(selector.getSelectorPath(), list);
+                }
             }
         }
         isCompiled = true;
@@ -44,6 +50,15 @@ public class JsonRequest<T> {
 
     public boolean isCompiled() {
         return isCompiled;
+    }
+
+    public JsonObjectModel getJsonObjectModel(Class<?> klass) {
+        for(JsonObjectModel objectModel : objectModels) {
+            if(objectModel.getKlass().equals(klass))
+                return objectModel;
+        }
+        // TODO: can we do something about this null value?
+        return null;
     }
 
     public void addObjectModel(JsonObjectModel objectModel) {
@@ -62,8 +77,9 @@ public class JsonRequest<T> {
     }
 
     public ArrayList<T> getResult(Map<String, Object> map) {
-        if(mainObjectModel == null)
+        if(mainObjectModel == null) {
             return objectList;
+        }
 
         if(!isCompiled())
             compile();
@@ -86,12 +102,17 @@ public class JsonRequest<T> {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return objectList;
     }
 
     private String getCurrentPath() {
+        if(currentPath.isEmpty())
+            return "";
+
         String curPath = "";
         Iterator<String> iter = currentPath.iterator();
         while(iter.hasNext()) {
@@ -106,33 +127,41 @@ public class JsonRequest<T> {
             String path = getCurrentPath();
             String field = pathMap.get(path);
 
-            JsonObjectModel objectModel = objectModelMap.get(path);
-            if(objectModel != null) {
-                objectModel.assembleObject(String.class, field, object);
+            List<JsonObjectModel> list = objectModelMap.get(path);
+            if(list != null) {
+                for (JsonObjectModel objectModel : objectModelMap.get(path)) {
+                    objectModel.assembleObject(String.class, path, object);
+                }
             }
         } else if(object instanceof Integer) {
             String path = getCurrentPath();
             String field = pathMap.get(path);
 
-            JsonObjectModel objectModel = objectModelMap.get(path);
-            if(objectModel != null) {
-                objectModel.assembleObject(Integer.class, field, object);
+            List<JsonObjectModel> list = objectModelMap.get(path);
+            if(list != null) {
+                for (JsonObjectModel objectModel : objectModelMap.get(path)) {
+                    objectModel.assembleObject(Integer.class, path, object);
+                }
             }
         } else if(object instanceof Double) {
             String path = getCurrentPath();
             String field = pathMap.get(path);
 
-            JsonObjectModel objectModel = objectModelMap.get(path);
-            if(objectModel != null) {
-                objectModel.assembleObject(Double.class, field, object);
+            List<JsonObjectModel> list = objectModelMap.get(path);
+            if(list != null) {
+                for (JsonObjectModel objectModel : objectModelMap.get(path)) {
+                    objectModel.assembleObject(Double.class, path, object);
+                }
             }
         } else if(object instanceof Boolean) {
             String path = getCurrentPath();
             String field = pathMap.get(path);
 
-            JsonObjectModel objectModel = objectModelMap.get(path);
-            if(objectModel != null) {
-                objectModel.assembleObject(Boolean.class, field, object);
+            List<JsonObjectModel> list = objectModelMap.get(path);
+            if(list != null) {
+                for (JsonObjectModel objectModel : objectModelMap.get(path)) {
+                    objectModel.assembleObject(Boolean.class, path, object);
+                }
             }
         } else if(object instanceof List) {
             @SuppressWarnings("unchecked")
@@ -146,20 +175,22 @@ public class JsonRequest<T> {
             while(iter.hasNext()) {
                 Map.Entry<String, Object> entry = iter.next();
                 if(entry.getValue() != null) {
-                    for(JsonObjectModel objectModel : objectModelMap.values()) {
-                        if(objectModel.getCurrentObject() == null)
-                            objectModel.createObject();
-
-                        if(objectModel.getObjectIndex().equals(0)) {
-                            if(objectModel.isInObject()) {
-                                if(!objectModel.equals(mainObjectModel)) {
-                                    JsonObjectModel parent = objectModel.getParent();
-                                    Method method = parent.getKlass().getMethod(objectModel.getField(), objectModel.getKlass());
-                                    method.invoke(parent.getCurrentObject(), objectModel.getCurrentObject());
-                                } else {
-                                    objectList.add(klass.cast(objectModel.getCurrentObject()));
-                                }
+                    for(List<JsonObjectModel> list : objectModelMap.values()) {
+                        for(JsonObjectModel objectModel : list) {
+                            if (objectModel.getCurrentObject() == null)
                                 objectModel.createObject();
+
+                            if (objectModel.getObjectIndex().equals(0)) {
+                                if (objectModel.isInObject()) {
+                                    if (!objectModel.equals(mainObjectModel)) {
+                                        JsonObjectModel parent = objectModel.getParent();
+                                        Method method = parent.getKlass().getMethod(objectModel.getParentField(), objectModel.getKlass());
+                                        method.invoke(parent.getCurrentObject(), objectModel.getCurrentObject());
+                                    } else {
+                                        objectList.add(klass.cast(objectModel.getCurrentObject()));
+                                    }
+                                    objectModel.createObject();
+                                }
                             }
                         }
                     }

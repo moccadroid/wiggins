@@ -8,8 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.lalelu.wiggins.errors.ExceptionPool;
-import org.lalelu.wiggins.selectors.json.JsonSelector;
+import org.lalelu.wiggins.selectors.json.JsonFieldSelector;
 
 public class JsonRequestBuilder<T> {
     private Map<String, JsonObjectModel> conditions = new LinkedHashMap<String, JsonObjectModel>();
@@ -78,7 +77,7 @@ public class JsonRequestBuilder<T> {
                 String path = parameters[2];
 
                 JsonObjectModel objectModel = objectModelMap.get(objectName);
-                objectModel.addSelector(new JsonSelector(field+":"+path));
+                objectModel.addSelector(new JsonFieldSelector(field+":"+path));
             }
             line = br.readLine();
         }

@@ -5,7 +5,8 @@ import java.util.List;
 import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.assembler.sql.SqlDeepDataObjectAssembler;
 import org.lalelu.wiggins.data.provider.DatabaseAccessProvider;
-import org.lalelu.wiggins.errors.ErrorHandler;
+import org.lalelu.wiggins.errors.ExceptionHandler;
+import org.lalelu.wiggins.errors.ExceptionPool;
 import org.lalelu.wiggins.requests.sql.Request;
 
 public class DatabaseFacade {
@@ -51,7 +52,7 @@ public class DatabaseFacade {
             }
 
         } catch (Exception e) {
-            ErrorHandler.resolveException(e, true);
+            ExceptionPool.getInstance().addException(e);
         }
 
         return request;
