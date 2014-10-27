@@ -10,4 +10,9 @@ public class DefaultDataConverter implements DataConverter {
     public Object write(Object object) {
         return object;
     }
+
+    @Override
+    public Object readCombined(Object firstObject, Object secondObject) {
+        return firstObject;
+    }
 }

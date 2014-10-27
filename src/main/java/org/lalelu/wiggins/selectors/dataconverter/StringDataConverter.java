@@ -8,7 +8,7 @@ public class StringDataConverter extends DefaultDataConverter {
     @Override
     public String write(Object object) {
         if(object == null)
-            return "''";
-        return "'"+object+"'";
+            return "";
+        return ""+object;
     }
 }

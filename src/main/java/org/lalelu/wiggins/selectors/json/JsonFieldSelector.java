@@ -32,6 +32,14 @@ public class JsonFieldSelector implements JsonSelector {
         return this.selectorPath;
     }
 
+    @Override
+    public DataConverter getDataConverter() {
+        if(fieldType != null)
+            return DataConverterProvider.getDefaultDataConverter(fieldType);
+        return new DefaultDataConverter();
+    }
+
+    @Override
     public DataConverter getDataConverter(Class<?> klass) {
         if(this.dataConverter == null)
             return DataConverterProvider.getDefaultDataConverter(klass);
@@ -43,6 +51,11 @@ public class JsonFieldSelector implements JsonSelector {
         if(this.fieldType == null)
             return Object.class;
         return fieldType;
+    }
+
+    @Override
+    public String getPrefix() {
+        return null;
     }
 
     public String toString() {

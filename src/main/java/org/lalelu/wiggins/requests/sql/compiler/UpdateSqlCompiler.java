@@ -1,4 +1,4 @@
-package org.lalelu.wiggins.requests.compiler;
+package org.lalelu.wiggins.requests.sql.compiler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

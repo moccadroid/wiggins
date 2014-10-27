@@ -1,7 +1,8 @@
 package org.lalelu.wiggins.requests.xml;
 
 import org.lalelu.wiggins.errors.ExceptionPool;
-import org.lalelu.wiggins.selectors.xml.XmlSelector;
+import org.lalelu.wiggins.requests.ObjectModel;
+import org.lalelu.wiggins.requests.Request;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,56 +16,18 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class XmlRequest<T> {
-    private Class<T> klass = null;
-    private XmlObjectModel mainObjectModel = null;
+public class XmlRequest<T> extends Request<T> {
     private Stack<String> currentPath = new Stack<String>();
-
-
-    private Map<String, String> pathMap = new HashMap<String, String>();
-    private Map<String, List<XmlObjectModel>> objectModelMap = new HashMap<String, List<XmlObjectModel>>();
-    private List<XmlObjectModel> objectModels = new ArrayList<XmlObjectModel>();
-
-    private boolean isCompiled = false;
-
-    private List<T> objectList = new ArrayList<T>();
+    //private Map<String, List<ObjectModel>> objectModelMap = new HashMap<String, List<ObjectModel>>();
+    //private List<ObjectModel> objectModels = new ArrayList<ObjectModel>();
 
     public XmlRequest(Class<T> klass) {
-        this.klass = klass;
-    }
-
-    public void addObjectModel(XmlObjectModel objectModel) {
-        if(objectModel.getKlass().equals(this.klass)) {
-            mainObjectModel = objectModel;
-        }
-        objectModels.add(objectModel);
-        isCompiled = false;
-    }
-
-    public void compile() {
-        pathMap.clear();
-        for(XmlObjectModel objectModel : objectModels) {
-            for (XmlSelector selector : objectModel.getSelectors()) {
-                pathMap.put(selector.getSelectorPath(), selector.getObjectField());
-                System.out.println("compile: "+ selector.getSelectorPath());
-                if(objectModelMap.containsKey(selector.getSelectorPath())) {
-                    objectModelMap.get(selector.getSelectorPath()).add(objectModel);
-                } else {
-                    List<XmlObjectModel> list = new ArrayList<XmlObjectModel>();
-                    list.add(objectModel);
-                    objectModelMap.put(selector.getSelectorPath(), list);
-                }
-            }
-        }
-        isCompiled = true;
-    }
-
-    public boolean isCompiled() {
-        return isCompiled;
+        super(klass);
     }
 
     public List<T> getResult(String xml) {
         objectList.clear();
+        currentPath.clear();
 
         if(!isCompiled)
             compile();
@@ -110,10 +73,10 @@ public class XmlRequest<T> {
             Element element = (Element) node;
 
             String path = getCurrentPath();
-            List<XmlObjectModel> list = objectModelMap.get(path);
+            List<ObjectModel> list = objectModelMap.get(path);
             if(list != null) {
-                for(XmlObjectModel objectModel : list) {
-                    objectModel.assembleObject(path, element);
+                for(ObjectModel objectModel : list) {
+                    ((XmlObjectModel)objectModel).assembleObject(path, element);
                 }
             }
 
@@ -121,24 +84,24 @@ public class XmlRequest<T> {
             for(int i = 0; i < nodeList.getLength(); i++) {
                 Node currentNode = nodeList.item(i);
                 if(currentNode instanceof Element) {
-                    for(XmlObjectModel objectModel : objectModels) {
+                    for(ObjectModel objectModel : objectModels) {
                         if(objectModel.getCurrentObject() == null)
                             objectModel.createObject();
 
                         if(objectModel.getObjectIndex().equals(0)) {
                             if(objectModel.isInObject() || !objectModel.hasSelectors()) {
-                                System.out.println(objectModel.getKlass().getSimpleName() + " " + objectModel.isComplete());
 
                                 if(!objectModel.equals(mainObjectModel)){
-                                    XmlObjectModel parent = objectModel.getParent();
+                                    ObjectModel parent = objectModel.getParent();
                                     parent.increaseChildrenIndex();
                                     Method method = parent.getKlass().getMethod(objectModel.getParentField(), objectModel.getKlass());
                                     method.invoke(parent.getCurrentObject(), objectModel.getCurrentObject());
+                                    objectModel.createObject();
                                 }
-                                objectModel.createObject();
                             }
                         }
                     }
+
                     if(mainObjectModel.isComplete()) {
                         objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
                         mainObjectModel.createObject();

@@ -1,6 +1,6 @@
 package org.lalelu.wiggins.selectors.csv;
 
-import org.lalelu.wiggins.selectors.csv.dataconverter.CombinedDataConverter;
+import org.lalelu.wiggins.selectors.dataconverter.CombinedDataConverter;
 
 public class CsvCombinedFieldSelector extends CsvFieldSelector {
 

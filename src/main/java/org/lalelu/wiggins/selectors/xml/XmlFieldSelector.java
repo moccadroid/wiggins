@@ -14,6 +14,10 @@ public class XmlFieldSelector implements XmlSelector {
         this(selectorPath, (objectField.substring(0, 1).toUpperCase() + objectField.substring(1)), null, fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
     }
 
+    public XmlFieldSelector(String selectorPath, String objectField, Class<?> fieldType, DataConverter dataConverter) {
+        this(selectorPath, (objectField.substring(0, 1).toUpperCase() + objectField.substring(1)), null, fieldType, dataConverter);
+    }
+
     public XmlFieldSelector(String selectorPath, String objectField, String attribute, Class<?> fieldType) {
         this(selectorPath, (objectField.substring(0, 1).toUpperCase() + objectField.substring(1)), attribute, fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
     }
@@ -36,6 +40,11 @@ public class XmlFieldSelector implements XmlSelector {
 
     public Class<?> getFieldType() {
         return this.fieldType;
+    }
+
+    @Override
+    public String getPrefix() {
+        return "";
     }
 
     public String getAttribute() {

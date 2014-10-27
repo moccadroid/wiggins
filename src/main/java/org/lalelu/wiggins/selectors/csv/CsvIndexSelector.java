@@ -1,7 +1,7 @@
 package org.lalelu.wiggins.selectors.csv;
 
-import org.lalelu.wiggins.selectors.csv.dataconverter.DataConverter;
-import org.lalelu.wiggins.selectors.csv.dataconverter.DefaultDataConverter;
+import org.lalelu.wiggins.selectors.dataconverter.DataConverter;
+import org.lalelu.wiggins.selectors.dataconverter.provider.DataConverterProvider;
 
 public class CsvIndexSelector implements CsvSelector {
     private Integer index;
@@ -10,7 +10,7 @@ public class CsvIndexSelector implements CsvSelector {
     private Class<?> fieldType = null;
 
     public CsvIndexSelector(Integer index, String objectField, Class<?> fieldType) {
-        this(index, (objectField.substring(0,1).toUpperCase() + objectField.substring(1)), fieldType, new DefaultDataConverter());
+        this(index, (objectField.substring(0,1).toUpperCase() + objectField.substring(1)), fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
     }
 
     public CsvIndexSelector(Integer index, String objectField, Class<?> fieldType, DataConverter dataConverter) {
@@ -29,7 +29,7 @@ public class CsvIndexSelector implements CsvSelector {
     }
 
     @Override
-    public String getCsvField() {
+    public String getSelectorPath() {
         return "" + index;
     }
 

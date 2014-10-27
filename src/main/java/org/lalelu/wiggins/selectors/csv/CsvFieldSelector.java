@@ -1,7 +1,7 @@
 package org.lalelu.wiggins.selectors.csv;
 
-import org.lalelu.wiggins.selectors.csv.dataconverter.DataConverter;
-import org.lalelu.wiggins.selectors.csv.dataconverter.DefaultDataConverter;
+import org.lalelu.wiggins.selectors.dataconverter.DataConverter;
+import org.lalelu.wiggins.selectors.dataconverter.DefaultDataConverter;
 
 public class CsvFieldSelector implements CsvSelector {
     private String csvField = "";
@@ -36,7 +36,7 @@ public class CsvFieldSelector implements CsvSelector {
     }
 
     @Override
-    public String getCsvField() {
+    public String getSelectorPath() {
         return csvField;
     }
 

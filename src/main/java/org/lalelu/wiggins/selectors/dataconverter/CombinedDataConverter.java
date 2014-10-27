@@ -1,6 +1,7 @@
-package org.lalelu.wiggins.selectors.csv.dataconverter;
+package org.lalelu.wiggins.selectors.dataconverter;
 
 public class CombinedDataConverter extends DefaultDataConverter {
+
     private String separator = "";
 
     public CombinedDataConverter(String separator) {

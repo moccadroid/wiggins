@@ -1,4 +1,4 @@
-package org.lalelu.wiggins.requests.compiler;
+package org.lalelu.wiggins.requests.sql.compiler;
 
 import org.lalelu.wiggins.requests.sql.RequestData;
 

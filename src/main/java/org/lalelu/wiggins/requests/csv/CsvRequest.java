@@ -10,42 +10,23 @@ import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.csvparser.CsvParser;
 import org.lalelu.wiggins.errors.ExceptionHandler;
 import org.lalelu.wiggins.errors.ExceptionPool;
+import org.lalelu.wiggins.requests.ObjectModel;
+import org.lalelu.wiggins.requests.Request;
 
-public class CsvRequest<T> {
-
-    private Class<T> klass = null;
-    private List<T> objectList = new ArrayList<T>();
+public class CsvRequest<T> extends Request<T> {
 
     private Map<Integer, List<CsvObjectModel>> headerMap = new HashMap<Integer, List<CsvObjectModel>>();
-
-    private CsvObjectModel mainObjectModel = null;
-    private List<CsvObjectModel> objectModels = new ArrayList<CsvObjectModel>();
-
     private boolean isNoHeader = false;
 
     public CsvRequest(Class<T> klass) {
-        this.klass = klass;
+        super(klass);
     }
 
     public void setIsNoHeader(boolean isNoHeader) {
         this.isNoHeader = isNoHeader;
     }
 
-    public void addObjectModel(CsvObjectModel objectModel) {
-        if(objectModel.getKlass().equals(klass)) {
-            mainObjectModel = objectModel;
-        }
-
-        objectModels.add(objectModel);
-    }
-
-    public ExceptionHandler getExceptions() {
-        return ExceptionPool.getInstance().getExceptionHandler(this);
-    }
-
     public List<T> getResult(String csvString) {
-        // register this request with the exceptionPool
-        ExceptionPool.getInstance().register(this);
 
         List<String[]> rowList;
         CsvParser csvParser = WigginsCentral.getCsvParser();
@@ -74,7 +55,8 @@ public class CsvRequest<T> {
                         for (CsvObjectModel objectModel : list) {
 
                             if (objectModel != null) {
-                                objectModel.createObject();
+                                if(objectModel.getCurrentObject() == null)
+                                    objectModel.createObject();
 
                                 if(isNoHeader)
                                     objectModel.assembleObject(""+i, row[i]);
@@ -85,14 +67,14 @@ public class CsvRequest<T> {
                                     if (objectModel.equals(mainObjectModel)) {
                                         objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
                                     } else {
-                                        Method method = mainObjectModel.getKlass().getMethod(objectModel.getField(), objectModel.getKlass());
+                                        Method method = mainObjectModel.getKlass().getMethod(objectModel.getParentField(), objectModel.getKlass());
                                         method.invoke(mainObjectModel.getCurrentObject(), objectModel.getCurrentObject());
                                     }
+                                    objectModel.createObject();
                                 }
                             }
                         }
                     }
-
                 }
             }
 
@@ -109,13 +91,14 @@ public class CsvRequest<T> {
             if(isNoHeader)
                 field = "" + i;
 
-            for(CsvObjectModel objectModel : objectModels) {
-                if(objectModel.containsObjectField(field)) {
+            for(ObjectModel objectModel : objectModels) {
+                CsvObjectModel csvObjectModel = (CsvObjectModel) objectModel;
+                if(csvObjectModel.containsObjectField(field)) {
                     if(headerMap.containsKey(i)) {
-                        headerMap.get(i).add(objectModel);
+                        headerMap.get(i).add(csvObjectModel);
                     } else {
                         List<CsvObjectModel> list = new ArrayList<CsvObjectModel>();
-                        list.add(objectModel);
+                        list.add(csvObjectModel);
                         headerMap.put(i, list);
                     }
                 }

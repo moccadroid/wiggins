@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.lalelu.wiggins.data.assembler.DataObjectAssembler;
-import org.lalelu.wiggins.requests.compiler.InsertSqlCompiler;
-import org.lalelu.wiggins.requests.compiler.SelectSqlCompiler;
-import org.lalelu.wiggins.requests.compiler.SqlCompiler;
-import org.lalelu.wiggins.requests.compiler.UpdateSqlCompiler;
+import org.lalelu.wiggins.requests.sql.compiler.InsertSqlCompiler;
+import org.lalelu.wiggins.requests.sql.compiler.SelectSqlCompiler;
+import org.lalelu.wiggins.requests.sql.compiler.SqlCompiler;
+import org.lalelu.wiggins.requests.sql.compiler.UpdateSqlCompiler;
 import org.lalelu.wiggins.selectors.sql.Selector;
 
 public class Request<T> {

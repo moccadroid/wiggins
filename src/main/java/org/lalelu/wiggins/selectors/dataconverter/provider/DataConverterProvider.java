@@ -11,6 +11,7 @@ public class DataConverterProvider {
         converterMap.put(String.class, new StringDataConverter());
         converterMap.put(Long.class, new LongDataConverter());
         converterMap.put(Double.class, new DoubleDataConverter());
+        converterMap.put(Boolean.class, new BooleanDataConverter());
     }
 
     public static DataConverter getDefaultDataConverter(Class<?> clazz) {

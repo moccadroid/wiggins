@@ -1,11 +1,7 @@
 package org.lalelu.wiggins.selectors.xml;
 
-import org.lalelu.wiggins.selectors.dataconverter.DataConverter;
+import org.lalelu.wiggins.selectors.Selector;
 
-public interface XmlSelector {
-    public String getSelectorPath();
-    public String getObjectField();
-    public DataConverter getDataConverter();
+public interface XmlSelector extends Selector {
     public String getAttribute();
-    public Class<?> getFieldType();
 }
