@@ -51,6 +51,9 @@ public class ExceptionPool {
     }
 
     public void addException(Exception e, Object caller) {
+        if(WigginsCentral.isPrintStackTrace())
+            e.printStackTrace();
+
         ExceptionHandler handler = registeredRequests.get(caller);
         if(handler != null) {
             handler.addException(e);

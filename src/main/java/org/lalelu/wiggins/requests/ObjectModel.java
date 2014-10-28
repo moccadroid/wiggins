@@ -1,5 +1,7 @@
 package org.lalelu.wiggins.requests;
 
+import org.lalelu.wiggins.conditions.BreakCondition;
+import org.lalelu.wiggins.conditions.Condition;
 import org.lalelu.wiggins.selectors.DefaultValueSelector;
 import org.lalelu.wiggins.selectors.Selector;
 
@@ -29,6 +31,9 @@ public abstract class ObjectModel {
 
     protected ObjectModel parent = null;
     protected String parentField = "";
+
+    protected Map<String, List<BreakCondition>> breakConditions = new HashMap<String, List<BreakCondition>>();
+    protected boolean hasBreakConditions = false;
 
     public ObjectModel(Class<?> klass) {
         this.klass = klass;
@@ -65,6 +70,25 @@ public abstract class ObjectModel {
             Method method = klass.getMethod("set" + selector.getObjectField(), selector.getFieldType());
             method.invoke(currentObject, selector.getDataConverter().read(null));
         }
+    }
+
+    public void addBreakCondition(BreakCondition breakCondition) {
+        if(breakConditions.containsKey(breakCondition.getField())) {
+            breakConditions.get(breakCondition.getField()).add(breakCondition);
+        } else {
+            List<BreakCondition> list = new ArrayList<BreakCondition>();
+            list.add(breakCondition);
+            breakConditions.put(breakCondition.getField(), list);
+        }
+        hasBreakConditions = true;
+    }
+
+    public Map<String, List<BreakCondition>> getBreakConditions() {
+        return breakConditions;
+    }
+
+    public boolean hasBreakConditions() {
+        return hasBreakConditions;
     }
 
     public Integer getObjectIndex() {

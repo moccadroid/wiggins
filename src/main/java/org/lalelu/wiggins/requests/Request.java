@@ -1,5 +1,7 @@
 package org.lalelu.wiggins.requests;
 
+import org.lalelu.wiggins.conditions.BreakCondition;
+import org.lalelu.wiggins.errors.ExceptionPool;
 import org.lalelu.wiggins.selectors.Selector;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public abstract class Request<T> {
 
     public Request(Class<T> klass) {
         this.klass = klass;
+        ExceptionPool.getInstance().register(this);
     }
 
     public void addObjectModel(ObjectModel objectModel) {
@@ -49,7 +52,23 @@ public abstract class Request<T> {
         isCompiled = true;
     }
 
+    protected boolean testBreakConditions(ObjectModel objectModel, Object object, String field) {
+        if(objectModel.hasBreakConditions()) {
+            List<BreakCondition> breakConditions = objectModel.getBreakConditions().get(field);
+            if (breakConditions != null) {
+
+                for(BreakCondition condition : breakConditions) {
+                    if(condition.test(object)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isCompiled() {
         return isCompiled;
     }
+
 }

@@ -1,5 +1,6 @@
 package org.lalelu.wiggins.requests.csv;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.lalelu.wiggins.WigginsCentral;
+import org.lalelu.wiggins.conditions.BreakCondition;
 import org.lalelu.wiggins.data.csvparser.CsvParser;
 import org.lalelu.wiggins.errors.ExceptionHandler;
 import org.lalelu.wiggins.errors.ExceptionPool;
@@ -22,7 +24,7 @@ public class CsvRequest<T> extends Request<T> {
         super(klass);
     }
 
-    public void setIsNoHeader(boolean isNoHeader) {
+    public void setNoHeader(boolean isNoHeader) {
         this.isNoHeader = isNoHeader;
     }
 
@@ -39,7 +41,7 @@ public class CsvRequest<T> extends Request<T> {
                 createHeaderMap(header);
 
                 // if we have a header then remove the first line
-                if(!isNoHeader)
+                if(isNoHeader)
                     rowList.remove(0);
 
             } else {
@@ -49,37 +51,66 @@ public class CsvRequest<T> extends Request<T> {
             mainObjectModel.createObject();
             for(String[] row : rowList) {
                 for(int i = 0; i < row.length; i++) {
+                    boolean conditionBreak = false;
 
                     List<CsvObjectModel> list = headerMap.get(i);
                     if(list != null) {
                         for (CsvObjectModel objectModel : list) {
 
                             if (objectModel != null) {
-                                if(objectModel.getCurrentObject() == null)
-                                    objectModel.createObject();
 
-                                if(isNoHeader)
-                                    objectModel.assembleObject(""+i, row[i]);
-                                else
-                                    objectModel.assembleObject(header[i], row[i]);
+                                conditionBreak = testBreakConditions(objectModel, row[i], ""+i);
+                                if(conditionBreak) {
+                                    break;
+                                }
 
-                                if (objectModel.getObjectIndex().equals(0)) {
-                                    if (objectModel.equals(mainObjectModel)) {
-                                        objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
-                                    } else {
-                                        Method method = mainObjectModel.getKlass().getMethod(objectModel.getParentField(), objectModel.getKlass());
-                                        method.invoke(mainObjectModel.getCurrentObject(), objectModel.getCurrentObject());
+                                try {
+
+                                    if(objectModel.getCurrentObject() == null)
+                                        objectModel.createObject();
+
+                                    if(isNoHeader)
+                                        objectModel.assembleObject(""+i, row[i]);
+                                    else
+                                        objectModel.assembleObject(header[i], row[i]);
+
+                                    if(objectModel.getObjectIndex().equals(0)) {
+                                        if (!objectModel.equals(mainObjectModel)) {
+                                            ObjectModel parent = objectModel.getParent();
+                                            parent.increaseChildrenIndex();
+                                            Method method = parent.getKlass().getMethod(objectModel.getParentField(), objectModel.getKlass());
+                                            method.invoke(parent.getCurrentObject(), objectModel.getCurrentObject());
+                                            objectModel.createObject();
+                                        }
                                     }
-                                    objectModel.createObject();
+                                } catch(NumberFormatException e) {
+                                    ExceptionPool.getInstance().addException(e, this);
+                                } catch (NoSuchMethodException e) {
+                                    ExceptionPool.getInstance().addException(e, this);
+                                } catch (InstantiationException e) {
+                                    ExceptionPool.getInstance().addException(e, this);
+                                } catch (IllegalAccessException e) {
+                                    ExceptionPool.getInstance().addException(e, this);
+                                } catch (InvocationTargetException e) {
+                                    ExceptionPool.getInstance().addException(e, this);
+                                } catch (Exception e) {
+                                    ExceptionPool.getInstance().addException(e, this);
                                 }
                             }
                         }
+                        if(mainObjectModel.isComplete()) {
+                            objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
+                            mainObjectModel.createObject();
+                        }
+                    }
+                    if(conditionBreak) {
+                        break;
                     }
                 }
             }
 
         } catch (Exception e) {
-            ExceptionPool.getInstance().addException(e);
+            ExceptionPool.getInstance().addException(e, this);
         }
         return objectList;
     }
