@@ -75,6 +75,7 @@ public class XmlRequest<T> extends Request<T> {
             String path = getCurrentPath();
             List<ObjectModel> list = objectModelMap.get(path);
             if(list != null) {
+
                 for(ObjectModel objectModel : list) {
                     ((XmlObjectModel)objectModel).assembleObject(path, element);
                 }

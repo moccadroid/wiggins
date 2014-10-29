@@ -41,7 +41,7 @@ public class CsvRequest<T> extends Request<T> {
                 createHeaderMap(header);
 
                 // if we have a header then remove the first line
-                if(isNoHeader)
+                if(!isNoHeader)
                     rowList.remove(0);
 
             } else {
@@ -69,10 +69,11 @@ public class CsvRequest<T> extends Request<T> {
                                     if(objectModel.getCurrentObject() == null)
                                         objectModel.createObject();
 
+                                    String field = header[i];
                                     if(isNoHeader)
-                                        objectModel.assembleObject(""+i, row[i]);
-                                    else
-                                        objectModel.assembleObject(header[i], row[i]);
+                                        field = "" + i;
+
+                                    objectModel.assembleObject(field, row[i]);
 
                                     if(objectModel.getObjectIndex().equals(0)) {
                                         if (!objectModel.equals(mainObjectModel)) {

@@ -112,7 +112,15 @@ public abstract class ObjectModel {
     }
 
     public boolean isComplete() {
-        return (childrenIndex.equals(childrenCount));
+        boolean allChildren = true;
+        if(childrenCount > 0)
+            allChildren = (childrenIndex.equals(childrenCount));
+        return allChildren;
+/*
+        boolean allObject = objectIndex.equals(objectLength);
+
+        return allChildren && allObject;
+        */
     }
 
     public void resetChildrenIndex() {
