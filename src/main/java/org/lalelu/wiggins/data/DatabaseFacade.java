@@ -5,9 +5,8 @@ import java.util.List;
 import org.lalelu.wiggins.WigginsCentral;
 import org.lalelu.wiggins.data.assembler.sql.SqlDeepDataObjectAssembler;
 import org.lalelu.wiggins.data.provider.DatabaseAccessProvider;
-import org.lalelu.wiggins.errors.ExceptionHandler;
 import org.lalelu.wiggins.errors.ExceptionPool;
-import org.lalelu.wiggins.requests.sql.Request;
+import org.lalelu.wiggins.requests.sql.SqlRequest;
 
 public class DatabaseFacade {
     private DatabaseAccessProvider databaseAccessProvider = null;
@@ -16,7 +15,7 @@ public class DatabaseFacade {
         this.databaseAccessProvider = WigginsCentral.getDatabaseAccessProvider();
     }
 
-    public <T> Request<T> updateRequest(Request<T> request) {
+    public <T> SqlRequest<T> updateRequest(SqlRequest<T> request) {
         if(!request.isUpdateCompiled()) {
             request.compileUpdate();
         }
@@ -26,7 +25,7 @@ public class DatabaseFacade {
         return request;
     }
 
-    public <T> Request<T> mergeRequest(Request<T> request) {
+    public <T> SqlRequest<T> mergeRequest(SqlRequest<T> request) {
         if(!request.isInsertCompiled()) {
             request.compileInsert();
         }
@@ -36,7 +35,7 @@ public class DatabaseFacade {
         return request;
     }
 
-    public <T> Request<T> getResult(Request<T> request) {
+    public <T> SqlRequest<T> getResult(SqlRequest<T> request) {
         try {
             if (!request.isSelectCompiled())
                 request.compileSelect();
@@ -46,7 +45,7 @@ public class DatabaseFacade {
 
             SqlDeepDataObjectAssembler assembler = new SqlDeepDataObjectAssembler();
             for (Object[] row : result) {
-            	assembler.setSelectorList(request.getSelectSelectors());
+                assembler.setSelectorList(request.getSelectSelectors());
             	assembler.setValues(row);
             	request.assembleAndAddObject(assembler);
             }

@@ -4,7 +4,7 @@ import org.lalelu.wiggins.selectors.dataconverter.DataConverter;
 
 import java.util.Map;
 
-public interface Selector<T> {
+public interface SqlSelector<T> {
     public String selectField();
     public String tableField();
     public String whereField();

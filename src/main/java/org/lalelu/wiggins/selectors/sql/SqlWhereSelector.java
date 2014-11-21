@@ -2,15 +2,15 @@ package org.lalelu.wiggins.selectors.sql;
 
 import java.util.List;
 
-public class WhereSelector<T> extends DefaultSelector<T> {
+public class SqlWhereSelector<T> extends SqlDefaultSelector<T> {
     private String whereField = null;
     private List<?> compareList = null;
 
-    public WhereSelector(String whereField) {
+    public SqlWhereSelector(String whereField) {
         this.whereField = whereField;
     }
 
-    public WhereSelector(String whereField, List<?> compareList) {
+    public SqlWhereSelector(String whereField, List<?> compareList) {
         if(compareList.isEmpty())
             this.whereField = "";
         else

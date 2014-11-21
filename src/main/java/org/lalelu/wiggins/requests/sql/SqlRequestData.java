@@ -1,28 +1,28 @@
 package org.lalelu.wiggins.requests.sql;
 
-import org.lalelu.wiggins.selectors.sql.LimitSelector;
-import org.lalelu.wiggins.selectors.sql.OrderBySelector;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.selectors.sql.SqlLimitSelector;
+import org.lalelu.wiggins.selectors.sql.SqlOrderBySelector;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RequestData<T> {
-    private List<Selector<?>> selectorList = new ArrayList<Selector<?>>();
+public class SqlRequestData<T> {
+    private List<SqlSelector<?>> selectorList = new ArrayList<SqlSelector<?>>();
 
-    private List<Selector<?>> selectSelectors = new ArrayList<Selector<?>>();
-    private List<Selector<?>> joinSelectors = new ArrayList<Selector<?>>();
-    private List<Selector<?>> whereSelectors = new ArrayList<Selector<?>>();
-    private List<Selector<?>> fromSelectors = new ArrayList<Selector<?>>();
+    private List<SqlSelector<?>> selectSelectors = new ArrayList<SqlSelector<?>>();
+    private List<SqlSelector<?>> joinSelectors = new ArrayList<SqlSelector<?>>();
+    private List<SqlSelector<?>> whereSelectors = new ArrayList<SqlSelector<?>>();
+    private List<SqlSelector<?>> fromSelectors = new ArrayList<SqlSelector<?>>();
 
-    private List<Selector<?>> compSelectList = new ArrayList<Selector<?>>();
-    private List<Selector<?>> compJoinList = new ArrayList<Selector<?>>();
-    private List<Selector<?>> compWhereList = new ArrayList<Selector<?>>();
-    private List<Selector<?>> compFromList = new ArrayList<Selector<?>>();
-    private Selector<?> limitSelector = new LimitSelector<Object>("");
-    private Selector<?> orderBySelector = new OrderBySelector<Object>("", "");
+    private List<SqlSelector<?>> compSelectList = new ArrayList<SqlSelector<?>>();
+    private List<SqlSelector<?>> compJoinList = new ArrayList<SqlSelector<?>>();
+    private List<SqlSelector<?>> compWhereList = new ArrayList<SqlSelector<?>>();
+    private List<SqlSelector<?>> compFromList = new ArrayList<SqlSelector<?>>();
+    private SqlSelector<?> limitSelector = new SqlLimitSelector<Object>("");
+    private SqlSelector<?> orderBySelector = new SqlOrderBySelector<Object>("", "");
 
     private Class<T> klass;
 
@@ -41,85 +41,85 @@ public class RequestData<T> {
 
     private List<T> resultList = new ArrayList<T>();
 
-    private Map<String, Request<?>> subRequests = new HashMap<String, Request<?>>();
+    private Map<String, SqlRequest<?>> subRequests = new HashMap<String, SqlRequest<?>>();
 
-    public List<Selector<?>> getSelectSelectors() {
+    public List<SqlSelector<?>> getSelectSelectors() {
         return selectSelectors;
     }
 
-    public void setSelectSelectors(List<Selector<?>> selectSelectors) {
+    public void setSelectSelectors(List<SqlSelector<?>> selectSelectors) {
         this.selectSelectors = selectSelectors;
     }
 
-    public List<Selector<?>> getJoinSelectors() {
+    public List<SqlSelector<?>> getJoinSelectors() {
         return joinSelectors;
     }
 
-    public void setJoinSelectors(List<Selector<?>> joinSelectors) {
+    public void setJoinSelectors(List<SqlSelector<?>> joinSelectors) {
         this.joinSelectors = joinSelectors;
     }
 
-    public List<Selector<?>> getWhereSelectors() {
+    public List<SqlSelector<?>> getWhereSelectors() {
         return whereSelectors;
     }
 
-    public void setWhereSelectors(List<Selector<?>> whereSelectors) {
+    public void setWhereSelectors(List<SqlSelector<?>> whereSelectors) {
         this.whereSelectors = whereSelectors;
     }
 
-    public List<Selector<?>> getFromSelectors() {
+    public List<SqlSelector<?>> getFromSelectors() {
         return fromSelectors;
     }
 
-    public void setFromSelectors(List<Selector<?>> fromSelectors) {
+    public void setFromSelectors(List<SqlSelector<?>> fromSelectors) {
         this.fromSelectors = fromSelectors;
     }
 
-    public List<Selector<?>> getCompSelectList() {
+    public List<SqlSelector<?>> getCompSelectList() {
         return compSelectList;
     }
 
-    public void setCompSelectList(List<Selector<?>> compSelectList) {
+    public void setCompSelectList(List<SqlSelector<?>> compSelectList) {
         this.compSelectList = compSelectList;
     }
 
-    public List<Selector<?>> getCompJoinList() {
+    public List<SqlSelector<?>> getCompJoinList() {
         return compJoinList;
     }
 
-    public void setCompJoinList(List<Selector<?>> compJoinList) {
+    public void setCompJoinList(List<SqlSelector<?>> compJoinList) {
         this.compJoinList = compJoinList;
     }
 
-    public List<Selector<?>> getCompWhereList() {
+    public List<SqlSelector<?>> getCompWhereList() {
         return compWhereList;
     }
 
-    public void setCompWhereList(List<Selector<?>> compWhereList) {
+    public void setCompWhereList(List<SqlSelector<?>> compWhereList) {
         this.compWhereList = compWhereList;
     }
 
-    public List<Selector<?>> getCompFromList() {
+    public List<SqlSelector<?>> getCompFromList() {
         return compFromList;
     }
 
-    public void setCompFromList(List<Selector<?>> compFromList) {
+    public void setCompFromList(List<SqlSelector<?>> compFromList) {
         this.compFromList = compFromList;
     }
 
-    public Selector<?> getLimitSelector() {
+    public SqlSelector<?> getLimitSelector() {
         return limitSelector;
     }
 
-    public void setLimitSelector(Selector<?> limitSelector) {
+    public void setLimitSelector(SqlSelector<?> limitSelector) {
         this.limitSelector = limitSelector;
     }
 
-    public Selector<?> getOrderBySelector() {
+    public SqlSelector<?> getOrderBySelector() {
         return orderBySelector;
     }
 
-    public void setOrderBySelector(Selector<?> orderBySelector) {
+    public void setOrderBySelector(SqlSelector<?> orderBySelector) {
         this.orderBySelector = orderBySelector;
     }
 
@@ -131,11 +131,11 @@ public class RequestData<T> {
         this.klass = klass;
     }
 
-    public List<Selector<?>> getSelectorList() {
+    public List<SqlSelector<?>> getSelectorList() {
         return selectorList;
     }
 
-    public void setSelectorList(List<Selector<?>> selectorList) {
+    public void setSelectorList(List<SqlSelector<?>> selectorList) {
         this.selectorList = selectorList;
     }
 
@@ -195,11 +195,11 @@ public class RequestData<T> {
         this.resultList = resultList;
     }
 
-    public Map<String, Request<?>> getSubRequests() {
+    public Map<String, SqlRequest<?>> getSubRequests() {
         return subRequests;
     }
 
-    public void setSubRequests(Map<String, Request<?>> subRequests) {
+    public void setSubRequests(Map<String, SqlRequest<?>> subRequests) {
         this.subRequests = subRequests;
     }
 

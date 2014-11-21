@@ -6,13 +6,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.lalelu.wiggins.requests.sql.Request;
-import org.lalelu.wiggins.requests.sql.RequestData;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.requests.sql.SqlRequest;
+import org.lalelu.wiggins.requests.sql.SqlRequestData;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
 public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
-    public String compile(RequestData<T> data) {
+    public String compile(SqlRequestData<T> data) {
         String compiledUpdateQuery = "";
 
         try {
@@ -20,14 +20,14 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
                 String tableName = "tableName";
                 String update = "UPDATE ";
                 if (!data.getFromSelectors().isEmpty()) {
-                    Selector<?> selector = (Selector<?>) data.getFromSelectors().get(0);
+                    SqlSelector<?> selector = (SqlSelector<?>) data.getFromSelectors().get(0);
                     update += selector.tableField() + " AS " + tableName + " ";
                 }
 
                 String values = " SET ";
                 String idField = "";
                 for (Object selectorObject : data.getSelectSelectors()) {
-                    Selector<?> selector = (Selector<?>) selectorObject;
+                    SqlSelector<?> selector = (SqlSelector<?>) selectorObject;
 
                     String methodName = selector.getFieldName();
                     Method method = data.getKlass().getMethod("get" + methodName.substring(3, methodName.length()));
@@ -50,7 +50,7 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
                 for(Object mapEntry : data.getSubRequests().entrySet()) {
                     Map.Entry<?,?> entry = (Map.Entry<?,?>) mapEntry;
-                    Request<?> subRequest = (Request<?>) entry.getValue();
+                    SqlRequest<?> subRequest = (SqlRequest<?>) entry.getValue();
 
 
                     String methodName = subRequest.getGetMethodName();
@@ -95,18 +95,18 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
         return compiledUpdateQuery;
     }
 
-    private String createUpdate(Request<?> request, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private String createUpdate(SqlRequest<?> request, Object object) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String tableName = "tableName";
         String update = "UPDATE ";
         if (!request.getFromSelectors().isEmpty()) {
-            Selector<?> selector = (Selector<?>) request.getFromSelectors().get(0);
+            SqlSelector<?> selector = (SqlSelector<?>) request.getFromSelectors().get(0);
             update += selector.tableField() + " AS " + tableName + " ";
         }
 
         String values = " SET ";
         String idField = "";
         for (Object objSelector : request.getSelectSelectors()) {
-            Selector<?> selector = (Selector<?>) objSelector;
+            SqlSelector<?> selector = (SqlSelector<?>) objSelector;
 
             String methodName = selector.getFieldName();
             Method method = request.getKlass().getMethod("get" + methodName.substring(3, methodName.length()));

@@ -10,11 +10,11 @@ import org.lalelu.wiggins.requests.sql.compiler.InsertSqlCompiler;
 import org.lalelu.wiggins.requests.sql.compiler.SelectSqlCompiler;
 import org.lalelu.wiggins.requests.sql.compiler.SqlCompiler;
 import org.lalelu.wiggins.requests.sql.compiler.UpdateSqlCompiler;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
-public class Request<T> {
+public class SqlRequest<T> {
 
-    RequestData<T> requestData = new RequestData<T>();
+    SqlRequestData<T> requestData = new SqlRequestData<T>();
 
     private String name = "";
 
@@ -22,21 +22,21 @@ public class Request<T> {
     private SqlCompiler<T> insertSqlCompiler = null;
     private SqlCompiler<T> updateSqlCompiler = null;
 
-    public Request(Class<T> klass) {
+    public SqlRequest(Class<T> klass) {
         requestData.setKlass(klass);
         selectSqlCompiler = new SelectSqlCompiler<T>();
         insertSqlCompiler = new InsertSqlCompiler<T>();
         updateSqlCompiler = new UpdateSqlCompiler<T>();
     }
 
-    public void addSelector(Selector<?> selector) {
+    public void addSelector(SqlSelector<?> selector) {
         requestData.getSelectorList().add(selector);
         requestData.setSelectCompiled(false);
         requestData.setInsertCompiled(false);
         requestData.setUpdateCompiled(false);
     }
 
-    public List<Selector<?>> getSelectors() {
+    public List<SqlSelector<?>> getSelectors() {
         return requestData.getSelectorList();
     }
 
@@ -70,7 +70,7 @@ public class Request<T> {
         return requestData.isUpdateCompiled();
     }
 
-    public void addSubRequest(String methodName, Request<?> request) {
+    public void addSubRequest(String methodName, SqlRequest<?> request) {
         requestData.getSubRequests().put(methodName, request);
         request.setName(methodName);
         requestData.setUpdateCompiled(false);
@@ -78,7 +78,7 @@ public class Request<T> {
         requestData.setSelectCompiled(false);
     }
 
-    public void addSubRequest(String setMethodName, String getMethodName, Request<?> request, boolean isMany) {
+    public void addSubRequest(String setMethodName, String getMethodName, SqlRequest<?> request, boolean isMany) {
         request.setSetMethodName(setMethodName);
         request.setGetMethodName(getMethodName);
         request.setMany(isMany);
@@ -112,7 +112,7 @@ public class Request<T> {
         return requestData.isMany();
     }
 
-    public Map<String, Request<?>> getSubRequests() {
+    public Map<String, SqlRequest<?>> getSubRequests() {
         return requestData.getSubRequests();
     }
 
@@ -128,19 +128,19 @@ public class Request<T> {
         return requestData.getCompiledInsertQuery();
     }
 
-    public List<Selector<?>> getSelectSelectors() {
+    public List<SqlSelector<?>> getSelectSelectors() {
         return requestData.getSelectSelectors();
     }
 
-    public List<Selector<?>> getJoinSelectors() {
+    public List<SqlSelector<?>> getJoinSelectors() {
         return requestData.getJoinSelectors();
     }
 
-    public List<Selector<?>> getWhereSelectors() {
+    public List<SqlSelector<?>> getWhereSelectors() {
         return requestData.getWhereSelectors();
     }
 
-    public List<Selector<?>> getFromSelectors() {
+    public List<SqlSelector<?>> getFromSelectors() {
         return requestData.getFromSelectors();
     }
 
@@ -200,7 +200,7 @@ public class Request<T> {
         requestData.getWhereSelectors().clear();
         requestData.getFromSelectors().clear();
 
-        for(Selector<?> selector : requestData.getSelectorList()) {
+        for(SqlSelector<?> selector : requestData.getSelectorList()) {
             if(selector.selectField() != null)
                 requestData.getSelectSelectors().add(selector);
             if(selector.leftJoinSide() != null && selector.rightJoinSide() != null)
@@ -219,7 +219,7 @@ public class Request<T> {
         requestData.getCompWhereList().addAll(requestData.getWhereSelectors());
         requestData.getCompFromList().addAll(requestData.getFromSelectors());
 
-        for(Map.Entry<String, Request<?>> entry : requestData.getSubRequests().entrySet()) {
+        for(Map.Entry<String, SqlRequest<?>> entry : requestData.getSubRequests().entrySet()) {
             if(!entry.getValue().isSelectCompiled())
                 entry.getValue().compileSelect();
 

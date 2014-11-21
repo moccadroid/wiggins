@@ -1,15 +1,15 @@
 package org.lalelu.wiggins.requests.sql.compiler;
 
-import org.lalelu.wiggins.requests.sql.RequestData;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.requests.sql.SqlRequestData;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
 public class SelectSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
-    public String compile(RequestData<T> data) {
+    public String compile(SqlRequestData<T> data) {
 
         String select = "SELECT ";
         for(Object object : data.getCompSelectList()) {
-            Selector<?> selector = (Selector<?>) object;
+            SqlSelector<?> selector = (SqlSelector<?>) object;
             if(selector.selectField() == null || selector.selectField().isEmpty() || selector.tableField() == null || selector.tableField().isEmpty())
                 continue;
 
@@ -20,7 +20,7 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
         String from = " FROM ";
         if(!data.getCompFromList().isEmpty()) {
-            Selector<?> selector = (Selector<?>) data.getCompFromList().get(0);
+            SqlSelector<?> selector = (SqlSelector<?>) data.getCompFromList().get(0);
 
             if (!from.contains(selector.tableField()))
                 from += selector.tableField() + ",";
@@ -30,7 +30,7 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
         String join = "";
         for(Object object : data.getCompJoinList()) {
-            Selector<?> selector = (Selector<?>) object;
+            SqlSelector<?> selector = (SqlSelector<?>) object;
             if(selector.leftJoinSide() == null || selector.leftJoinSide().isEmpty() || selector.rightJoinSide() == null || selector.rightJoinSide().isEmpty())
                 continue;
 
@@ -44,7 +44,7 @@ public class SelectSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
         String where = " WHERE ";
         for(Object object : data.getCompWhereList()) {
-            Selector<?> selector = (Selector<?>) object;
+            SqlSelector<?> selector = (SqlSelector<?>) object;
             if(selector.whereField() == null || selector.whereField().isEmpty())
                 continue;
 

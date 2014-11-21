@@ -5,21 +5,21 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.lalelu.wiggins.requests.sql.Request;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.requests.sql.SqlRequest;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
 public class SqlDeepDataObjectAssembler extends SqlDefaultDataObjectAssembler {
     Object currentObject = null;
     String currentKeyValue = "";
 
     @Override
-    public <E> E assembleObject(Request<E> request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
+    public <E> E assembleObject(SqlRequest<E> request) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, InstantiationException {
         Class<E> klass = request.getKlass();
         E object = klass.newInstance();
 
         int count;
         for(count = 0; count < selectorList.size(); count++) {
-            Selector<?> selector = selectorList.get(count);
+            SqlSelector<?> selector = selectorList.get(count);
 
             if(selector.isKey()) {
                 if(!currentKeyValue.equals(values[count]+"")) {
@@ -35,11 +35,11 @@ public class SqlDeepDataObjectAssembler extends SqlDefaultDataObjectAssembler {
             method.invoke(object, selector.getDataConverter().read(values[count]));
         }
 
-        Map<String, Request<?>> subRequests = request.getSubRequests();
+        Map<String, SqlRequest<?>> subRequests = request.getSubRequests();
         SqlDeepDataObjectAssembler deepDataSubObjectAssembler = new SqlDeepDataObjectAssembler();
 
-        for(Map.Entry<String, Request<?>> entry : subRequests.entrySet()) {
-            Request<?> subRequest = entry.getValue();
+        for(Map.Entry<String, SqlRequest<?>> entry : subRequests.entrySet()) {
+            SqlRequest<?> subRequest = entry.getValue();
             int numValuesProcessed = countValuesRequired(subRequest);
             
             deepDataSubObjectAssembler.setSelectorList(subRequest.getSelectSelectors());
@@ -54,9 +54,9 @@ public class SqlDeepDataObjectAssembler extends SqlDefaultDataObjectAssembler {
         return object;
     }
     
-    private int countValuesRequired(Request<?> request) {
+    private int countValuesRequired(SqlRequest<?> request) {
     	int count = request.getSelectors().size();
-    	for(Request<?> subRequest : request.getSubRequests().values())
+    	for(SqlRequest<?> subRequest : request.getSubRequests().values())
     		count += countValuesRequired(subRequest);
     	return count;
     }

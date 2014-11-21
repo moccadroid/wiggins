@@ -19,6 +19,7 @@ public class SelectorTest {
     @Test
     public void testCsvSelectors() {
         CsvFieldSelector csvFieldSelector1 = new CsvFieldSelector("csvField", "objectField", String.class);
+        CsvFieldSelector csvFieldSelector4 = new CsvFieldSelector("csvField", "objectField", String.class, new DoubleDataConverter());
         CsvFieldSelector csvFieldSelector2 = new CsvFieldSelector("csvField", "objectField", "prefix1_", Double.class);
         CsvFieldSelector csvFieldSelector3 = new CsvFieldSelector("csvField", "objectField", "prefix2_", String.class, new DefaultDataConverter());
 
@@ -49,6 +50,13 @@ public class SelectorTest {
         Assert.assertEquals(csvFieldSelector3.getFieldType(), String.class);
         Assert.assertEquals(csvFieldSelector3.getPrefix(), "prefix2_");
         Assert.assertEquals(csvFieldSelector3.getDataConverter().getClass(), DefaultDataConverter.class);
+
+        // csvFieldSelector4:
+        Assert.assertEquals(csvFieldSelector4.getSelectorPath(), "csvField");
+        Assert.assertEquals(csvFieldSelector4.getObjectField(), "ObjectField");
+        Assert.assertEquals(csvFieldSelector4.getFieldType(), String.class);
+        Assert.assertEquals(csvFieldSelector4.getPrefix(), "");
+        Assert.assertEquals(csvFieldSelector4.getDataConverter().getClass(), DoubleDataConverter.class);
 
         // csvCombinedFieldSelector
         Assert.assertEquals(csvCombinedFieldSelector.getSelectorPath(), "csvField");

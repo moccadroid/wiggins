@@ -1,11 +1,11 @@
 package org.lalelu.wiggins.selectors.sql;
 
-public class JoinSelector<T> extends DefaultSelector<T> {
+public class SqlJoinSelector<T> extends SqlDefaultSelector<T> {
     private String tableField = null;
     private String leftJoinSide = null;
     private String rightJoinSide = null;
 
-    public JoinSelector(String tableField, String leftJoinSide, String rightJoinSide) {
+    public SqlJoinSelector(String tableField, String leftJoinSide, String rightJoinSide) {
         this.tableField = tableField;
         this.leftJoinSide = leftJoinSide;
         this.rightJoinSide = rightJoinSide;

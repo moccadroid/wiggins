@@ -5,7 +5,7 @@ import org.lalelu.wiggins.selectors.dataconverter.DefaultDataConverter;
 
 import java.util.Map;
 
-public class DefaultSelector<T> implements Selector<T> {
+public class SqlDefaultSelector<T> implements SqlSelector<T> {
     protected DataConverter dataConverter = new DefaultDataConverter();
 
     @Override

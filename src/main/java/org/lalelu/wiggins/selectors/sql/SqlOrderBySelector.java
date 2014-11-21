@@ -1,9 +1,9 @@
 package org.lalelu.wiggins.selectors.sql;
 
-public class OrderBySelector<T> extends DefaultSelector<T> {
+public class SqlOrderBySelector<T> extends SqlDefaultSelector<T> {
     private String orderField = null;
 
-    public OrderBySelector(String order, String direction) {
+    public SqlOrderBySelector(String order, String direction) {
         if(!order.isEmpty())
             orderField = " ORDER BY " + order + " " + direction;
     }

@@ -8,9 +8,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.lalelu.wiggins.data.assembler.sql.SqlDeepDataObjectAssembler;
-import org.lalelu.wiggins.requests.sql.Request;
-import org.lalelu.wiggins.selectors.sql.FieldSelector;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.requests.sql.SqlRequest;
+import org.lalelu.wiggins.selectors.sql.SqlFieldSelector;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
 public class DeepDataObjectAssemblerTest {
 	private SqlDeepDataObjectAssembler assembler;
@@ -25,8 +25,8 @@ public class DeepDataObjectAssemblerTest {
 	 */
 	@Test
 	public void testSimpleRequest() {
-		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+		SqlRequest<TestData> request = new SqlRequest<TestData>(TestData.class);
+		request.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 		
 		Integer value = Integer.valueOf(42);
 		assembler.setSelectorList(request.getSelectors());
@@ -45,16 +45,16 @@ public class DeepDataObjectAssemblerTest {
 	 */
 	@Test
 	public void testRequestWithOneSubRequest() {
-		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+		SqlRequest<TestData> request = new SqlRequest<TestData>(TestData.class);
+		request.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 		
-		Request<TestData> subRequest = new Request<TestData>(TestData.class);
-		subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+		SqlRequest<TestData> subRequest = new SqlRequest<TestData>(TestData.class);
+		subRequest.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 		request.addSubRequest("setSubData", subRequest);
 		
 		request.compileSelect();
 		
-		List<Selector<?>> selectors = new LinkedList<Selector<?>>();
+		List<SqlSelector<?>> selectors = new LinkedList<SqlSelector<?>>();
 		selectors.addAll(request.getSelectSelectors());
 		
 		assembler.setSelectorList(selectors);
@@ -86,28 +86,28 @@ public class DeepDataObjectAssemblerTest {
 			values[i] = i;
 		}
 		
-		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+		SqlRequest<TestData> request = new SqlRequest<TestData>(TestData.class);
+		request.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 		
-		Request<TestData> prevRequest = request;
+		SqlRequest<TestData> prevRequest = request;
 		for(int i = p; i < k; i++) {
-			Request<TestData> subRequest = new Request<TestData>(TestData.class);
-			subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+			SqlRequest<TestData> subRequest = new SqlRequest<TestData>(TestData.class);
+			subRequest.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 			prevRequest.addSubRequest("setOtherSubData", subRequest);
 			prevRequest = subRequest;
 		}
 		
 		prevRequest = request;
 		for(int i = 1; i < p; i++) {
-			Request<TestData> subRequest = new Request<TestData>(TestData.class);
-			subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+			SqlRequest<TestData> subRequest = new SqlRequest<TestData>(TestData.class);
+			subRequest.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 			prevRequest.addSubRequest("setSubData", subRequest);
 			prevRequest = subRequest;
 		}
 		
 		request.compileSelect();
 		
-		List<Selector<?>> selectors = new LinkedList<Selector<?>>();
+		List<SqlSelector<?>> selectors = new LinkedList<SqlSelector<?>>();
 		selectors.addAll(request.getSelectSelectors());
 		
 		assembler.setSelectorList(selectors);
@@ -147,23 +147,23 @@ public class DeepDataObjectAssemblerTest {
 			values[i] = i;
 		}
 		
-		List<Request<TestData>> list = new ArrayList<Request<TestData>>();
+		List<SqlRequest<TestData>> list = new ArrayList<SqlRequest<TestData>>();
 		
-		Request<TestData> request = new Request<TestData>(TestData.class);
-		request.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+		SqlRequest<TestData> request = new SqlRequest<TestData>(TestData.class);
+		request.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 		list.add(request);
 		
-		Request<TestData> prevRequest = request;
+		SqlRequest<TestData> prevRequest = request;
 		for(int i = 1; i < k; i++) {
-			Request<TestData> subRequest = new Request<TestData>(TestData.class);
-			subRequest.addSelector(new FieldSelector<Object>("", "", "setTestField", Object.class));
+			SqlRequest<TestData> subRequest = new SqlRequest<TestData>(TestData.class);
+			subRequest.addSelector(new SqlFieldSelector<Object>("", "", "setTestField", Object.class));
 			prevRequest.addSubRequest("setSubData", subRequest);
 			prevRequest = subRequest;
 		}
 		
 		request.compileSelect();
 		
-		List<Selector<?>> selectors = new LinkedList<Selector<?>>();
+		List<SqlSelector<?>> selectors = new LinkedList<SqlSelector<?>>();
 		selectors.addAll(request.getSelectSelectors());
 		
 		assembler.setSelectorList(selectors);

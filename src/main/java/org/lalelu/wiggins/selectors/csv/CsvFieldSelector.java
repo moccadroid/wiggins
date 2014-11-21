@@ -15,6 +15,10 @@ public class CsvFieldSelector implements CsvSelector {
         this(csvField, (objectField.substring(0,1).toUpperCase() + objectField.substring(1)), "", fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
     }
 
+    public CsvFieldSelector(String csvField, String objectField, Class<?> fieldType, DataConverter dataConverter) {
+        this(csvField, (objectField.substring(0,1).toUpperCase() + objectField.substring(1)), "", fieldType, dataConverter);
+    }
+
     public CsvFieldSelector(String csvField, String objectField, String prefix, Class<?> fieldType) {
         this(csvField, (objectField.substring(0,1).toUpperCase() + objectField.substring(1)), prefix, fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
     }

@@ -1,24 +1,24 @@
 package org.lalelu.wiggins.requests.sql.compiler;
 
-import org.lalelu.wiggins.requests.sql.RequestData;
-import org.lalelu.wiggins.selectors.sql.Selector;
+import org.lalelu.wiggins.requests.sql.SqlRequestData;
+import org.lalelu.wiggins.selectors.sql.SqlSelector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class InsertSqlCompiler<T> extends DefaultSqlCompiler<T> {
 
-    public String compile(RequestData<T> data) {
+    public String compile(SqlRequestData<T> data) {
         String insert = "INSERT INTO ";
         if(!data.getCompFromList().isEmpty()) {
-            Selector<?> selector = (Selector<?>) data.getCompFromList().get(0);
+            SqlSelector<?> selector = (SqlSelector<?>) data.getCompFromList().get(0);
 
             insert += selector.tableField() + " ";
         }
 
         String fields = "(";
         for(Object object : data.getCompSelectList()) {
-            Selector<?> selector = (Selector<?>) object;
+            SqlSelector<?> selector = (SqlSelector<?>) object;
             if(selector.selectField().equals("id"))
                 continue;
             fields += selector.selectField() + ",";
@@ -30,7 +30,7 @@ public class InsertSqlCompiler<T> extends DefaultSqlCompiler<T> {
         for(Object object : data.getResultList()) {
             values += "(";
             for (Object selectorObject : data.getCompSelectList()) {
-                Selector<?> selector = (Selector<?>) selectorObject;
+                SqlSelector<?> selector = (SqlSelector<?>) selectorObject;
                 if(selector.selectField().equals("id"))
                     continue;
 
