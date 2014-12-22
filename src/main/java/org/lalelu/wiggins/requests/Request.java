@@ -59,6 +59,7 @@ public abstract class Request<T> {
 
                 for(BreakCondition condition : breakConditions) {
                     if(condition.test(object)) {
+                        objectModel.setBreakConditionFound(true);
                         return true;
                     }
                 }

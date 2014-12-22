@@ -34,6 +34,7 @@ public abstract class ObjectModel {
 
     protected Map<String, List<BreakCondition>> breakConditions = new HashMap<String, List<BreakCondition>>();
     protected boolean hasBreakConditions = false;
+    protected boolean breakConditionFound = false;
 
     public ObjectModel(Class<?> klass) {
         this.klass = klass;
@@ -65,6 +66,7 @@ public abstract class ObjectModel {
         isInObject = false;
         childrenIndex = 0;
         visitedMap.clear();
+        breakConditionFound = false;
 
         for(Selector selector : defaultValueSelectors) {
             Method method = klass.getMethod("set" + selector.getObjectField(), selector.getFieldType());
@@ -81,6 +83,14 @@ public abstract class ObjectModel {
             breakConditions.put(breakCondition.getField(), list);
         }
         hasBreakConditions = true;
+    }
+
+    public boolean breakConditionFound() {
+        return breakConditionFound;
+    }
+
+    public void setBreakConditionFound(boolean breakConditionFound) {
+        this.breakConditionFound = breakConditionFound;
     }
 
     public Map<String, List<BreakCondition>> getBreakConditions() {
@@ -116,11 +126,6 @@ public abstract class ObjectModel {
         if(childrenCount > 0)
             allChildren = (childrenIndex.equals(childrenCount));
         return allChildren;
-/*
-        boolean allObject = objectIndex.equals(objectLength);
-
-        return allChildren && allObject;
-        */
     }
 
     public void resetChildrenIndex() {

@@ -1,5 +1,6 @@
 package org.lalelu.wiggins.requests.xml;
 
+import org.lalelu.wiggins.conditions.BreakCondition;
 import org.lalelu.wiggins.errors.ExceptionPool;
 import org.lalelu.wiggins.requests.ObjectModel;
 import org.lalelu.wiggins.requests.Request;
@@ -73,13 +74,17 @@ public class XmlRequest<T> extends Request<T> {
             Element element = (Element) node;
 
             String path = getCurrentPath();
+
             List<ObjectModel> list = objectModelMap.get(path);
             if(list != null) {
-
                 for(ObjectModel objectModel : list) {
-                    ((XmlObjectModel)objectModel).assembleObject(path, element);
+
+                    if(!testBreakConditions(objectModel, element, path))
+                        ((XmlObjectModel)objectModel).assembleObject(path, element);
                 }
             }
+
+            testBreakConditions(mainObjectModel, element, path);
 
             NodeList nodeList = node.getChildNodes();
             for(int i = 0; i < nodeList.getLength(); i++) {
@@ -104,7 +109,9 @@ public class XmlRequest<T> extends Request<T> {
                     }
 
                     if(mainObjectModel.isComplete()) {
-                        objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
+                        if(!mainObjectModel.breakConditionFound())
+                            objectList.add(klass.cast(mainObjectModel.getCurrentObject()));
+
                         mainObjectModel.createObject();
                     }
 

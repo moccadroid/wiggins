@@ -1,12 +1,23 @@
 package org.lalelu.wiggins.conditions;
 
-public class BreakCondition implements Condition {
-    private String field = "";
-    private Object object = null;
+import org.lalelu.wiggins.selectors.Selector;
 
-    public BreakCondition(String field, String object) {
+public class BreakCondition implements Condition {
+    protected String field = "";
+    protected Object object = null;
+    protected boolean ifEqual = true;
+    protected Selector selector = null;
+
+    public BreakCondition(Selector selector, Object value, boolean ifEqual) {
+        this.selector = selector;
+        this.object = value;
+        this.ifEqual = ifEqual;
+    }
+
+    public BreakCondition(String field, String object, boolean ifEqual) {
         this.field = field;
         this.object = object;
+        this.ifEqual = ifEqual;
     }
 
     public String getField() {
@@ -15,8 +26,13 @@ public class BreakCondition implements Condition {
 
     @Override
     public boolean test(Object testObject) {
-        if(object.equals(testObject))
-            return true;
+        if(this.ifEqual) {
+            if (object.equals(testObject))
+                return true;
+        } else {
+            if(!object.equals(testObject))
+                return true;
+        }
         return false;
     }
 }
