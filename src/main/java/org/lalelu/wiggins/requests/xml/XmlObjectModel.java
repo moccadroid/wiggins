@@ -54,4 +54,8 @@ public class XmlObjectModel extends ObjectModel {
         }
         visitedMap.put(path, true);
     }
+
+    public void joinOn(String joinPath, String value) {
+
+    }
 }

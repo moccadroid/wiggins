@@ -6,8 +6,4 @@ public class XmlCombinedFieldSelector extends XmlFieldSelector {
     public XmlCombinedFieldSelector(String selectorPath, String objectField, String separator, Class<?> fieldType) {
         super(selectorPath, objectField, fieldType, new CombinedDataConverter(separator));
     }
-
-    public XmlCombinedFieldSelector(String selectorPath, String objectField, String attribute, String separator, Class<?> fieldType) {
-        super(selectorPath, objectField, attribute, fieldType, new CombinedDataConverter(separator));
-    }
 }

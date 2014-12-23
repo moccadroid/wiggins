@@ -11,22 +11,22 @@ public class XmlFieldSelector implements XmlSelector {
     private Class<?> fieldType = null;
 
     public XmlFieldSelector(String selectorPath, String objectField, Class<?> fieldType) {
-        this(selectorPath, (objectField.substring(0, 1).toUpperCase() + objectField.substring(1)), null, fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
+        this(selectorPath, objectField, fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
     }
 
     public XmlFieldSelector(String selectorPath, String objectField, Class<?> fieldType, DataConverter dataConverter) {
-        this(selectorPath, (objectField.substring(0, 1).toUpperCase() + objectField.substring(1)), null, fieldType, dataConverter);
-    }
+        if(selectorPath != null && selectorPath.contains("::")) {
+            String[] split = selectorPath.split("::");
+            if(split.length > 1) {
+                this.attribute = split[1];
+                this.selectorPath = split[0];
+            }
+        } else {
+            this.selectorPath = selectorPath;
+        }
 
-    public XmlFieldSelector(String selectorPath, String objectField, String attribute, Class<?> fieldType) {
-        this(selectorPath, (objectField.substring(0, 1).toUpperCase() + objectField.substring(1)), attribute, fieldType, DataConverterProvider.getDefaultDataConverter(fieldType));
-    }
-
-    public XmlFieldSelector(String selectorPath, String objectField, String attribute, Class<?> fieldType, DataConverter dataConverter) {
-        this.selectorPath = selectorPath;
         this.objectField = objectField.substring(0,1).toUpperCase() + objectField.substring(1);
         this.dataConverter = dataConverter;
-        this.attribute = attribute;
         this.fieldType = fieldType;
     }
 
