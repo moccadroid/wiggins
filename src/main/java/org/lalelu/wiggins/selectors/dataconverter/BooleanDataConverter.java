@@ -5,7 +5,7 @@ public class BooleanDataConverter extends DefaultDataConverter {
         if(object == null)
             return false;
         if(object instanceof String) {
-            if(object.equals("true"))
+            if(((String)object).trim().equals("true"))
                 return true;
         }
         return false;

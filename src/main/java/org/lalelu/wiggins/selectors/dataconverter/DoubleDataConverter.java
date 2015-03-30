@@ -5,6 +5,6 @@ public class DoubleDataConverter extends DefaultDataConverter {
     public Double read(Object object) {
         if(object == null)
             return 0.0;
-        return Double.valueOf(String.valueOf(object));
+        return Double.valueOf(String.valueOf(object).trim());
     }
 }

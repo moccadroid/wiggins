@@ -67,7 +67,6 @@ public class UpdateSqlCompiler<T> extends DefaultSqlCompiler<T> {
                         if(subObject instanceof Collection<?>) {
                             @SuppressWarnings("unchecked") // TODO check if thats a valid cast (and remove the todo if so)
 							List<Object> objectList = (List<Object>) subObject;
-                            System.out.println(objectList.size());
                             for(Object o : objectList) {
                                 compiledUpdateQuery += createUpdate(subRequest, o) + "; ";
                             }

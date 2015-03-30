@@ -123,9 +123,15 @@ public abstract class ObjectModel {
 
     public boolean isComplete() {
         boolean allChildren = true;
+        boolean index = false;
+
         if(childrenCount > 0)
             allChildren = (childrenIndex.equals(childrenCount));
-        return allChildren;
+
+        if(objectIndex == 0)
+            index = true;
+
+        return allChildren && index;
     }
 
     public void resetChildrenIndex() {

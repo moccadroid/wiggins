@@ -66,13 +66,16 @@ public class CsvRequest<T> extends Request<T> {
 
                                 try {
 
+                                    // create a new object if there's no current one
                                     if(objectModel.getCurrentObject() == null)
                                         objectModel.createObject();
 
+                                    // get the current header (if there is no header, take the index)
                                     String field = header[i];
                                     if(isNoHeader)
                                         field = "" + i;
 
+                                    // let the objectmodel assemble itself with the value at this index
                                     objectModel.assembleObject(field, row[i]);
 
                                     if(objectModel.getObjectIndex().equals(0)) {

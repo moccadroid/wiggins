@@ -84,7 +84,7 @@ public class XmlRequest<T> extends Request<T> {
                 }
             }
 
-            testBreakConditions(mainObjectModel, element, path);
+            this.testBreakConditions(mainObjectModel, element, path);
 
             NodeList nodeList = node.getChildNodes();
             for(int i = 0; i < nodeList.getLength(); i++) {
